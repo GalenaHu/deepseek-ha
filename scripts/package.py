@@ -44,6 +44,8 @@ def build():
     ) as archive:
         for path in sorted(ROOT.rglob("*")):
             relative = path.relative_to(ROOT)
+            if relative == Path("test-results.xml"):
+                continue
             if not path.is_file() or any(
                 (part.startswith(".") and part not in {".github", ".gitignore"})
                 or part in {"dist", "__pycache__", "_ha-core"}

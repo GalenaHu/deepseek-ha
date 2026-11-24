@@ -10,7 +10,7 @@
 4. 默认创建对话、AI 数据任务、语音识别、语音合成四个子项。可继续添加多个独立子项，在各子项菜单中重新配置。
 5. 在「设置 → 语音助手」选择本集成的对话、STT 和 TTS 实体。唤醒词继续使用 HA 现有方案。
 
-`deepseek_ai.zip` 是 HACS release asset 格式；本项目附 `hacs.json`，但本次不创建或发布远程仓库。上传仓库及发布附件后才能作为 HACS 自定义仓库在线安装。安装期间不要把 API Key 写入源码或公开 issue。
+`deepseek_ai.zip` 是 HACS release asset 格式；本项目附 `hacs.json`。目标源码仓库为个人账号下的 [GalenaHu/deepseek-ha](https://github.com/GalenaHu/deepseek-ha)，与 Biology 一样使用私有可见性。此次推送源码与 CI 配置，不创建 Release；HACS 在线安装还需要后续发布 Release 附件及配置相应仓库访问权限。安装期间不要把 API Key 写入源码或公开 issue。
 
 ## 支持能力
 
@@ -101,7 +101,7 @@ python3.14 -m venv .venv
 .venv/bin/python scripts/package.py
 ```
 
-测试摄像头依赖系统 FFmpeg、libturbojpeg；测试语音会在本机回环地址启动模拟服务。配置、会话、权限与服务使用真实HA，外部DeepSeek通信全部模拟。CI配置位于 `.github/workflows/validate.yml`，本次只在本机执行验证，尚未运行远程 CI。
+测试摄像头依赖系统 FFmpeg、libturbojpeg；测试语音会在本机回环地址启动模拟服务。配置、会话、权限与服务使用真实HA，外部DeepSeek通信全部模拟。CI配置位于 `.github/workflows/validate.yml`，推送后 GitHub Actions 会执行同样的验证并生成可下载安装附件；实际远程运行结果以仓库 Actions 页面为准。
 
 `dist/deepseek_ai-0.1.0-manual.zip` 为手动安装包，`dist/deepseek_ai.zip` 为 HACS release asset，`dist/deepseek-ha-0.1.0-source.zip` 为源码、测试和指南。校验值见 `dist/SHA256SUMS`。安装包不含虚拟环境、API Key、测试缓存或用户HA配置。
 

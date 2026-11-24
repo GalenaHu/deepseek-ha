@@ -239,3 +239,58 @@ async def test_demoted_admin_cannot_reuse_cached_tool_api(hass, entry, provider)
         hass, entry, conversation_id=first.conversation_id, context=Context(user_id=user.id)
     )
     assert result.response.error_code is not None and len(provider.requests) == count
+
+
+@pytest.mark.parametrize("closure", ["success", "failure", "cancel"])
+async def test_provider_stream_closes_before_tool_execution(hass, entry, provider, lights, closure):
+    import asyncio
+
+    closing, release = asyncio.Event(), asyncio.Event()
+    event = {
+        "type": "response.completed",
+        "response": {
+            "status": "completed",
+            "output": [
+                {
+                    "type": "function_call",
+                    "call_id": "after-close",
+                    "name": "intent__HassTurnOn",
+                    "arguments": json.dumps({"name": "Exposed", "domain": "light"}),
+                }
+            ],
+        },
+    }
+
+    class Stream(httpx.AsyncByteStream):
+        async def __aiter__(self):
+            yield ("data: " + json.dumps(event) + "\n\n").encode()
+
+        async def aclose(self):
+            closing.set()
+            await release.wait()
+            if closure == "failure":
+                raise httpx.ReadError("PRIVATE_CLOSE_ERROR")
+
+    provider.queue.append(httpx.Response(200, stream=Stream()))
+    if closure == "success":
+        provider.complete("Done")
+    job = asyncio.create_task(converse(hass, entry))
+    await closing.wait()
+    assert not lights, "No device action may start while the provider stream is closing"
+    if closure == "cancel":
+        job.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await job
+        assert not lights
+    else:
+        release.set()
+        result = await job
+        if closure == "success":
+            assert result.response.error_code is None and len(lights) == 1
+            inputs = json.loads(provider.requests[-1].content)["input"]
+            assert any(
+                item.get("type") == "function_call_output" and item["call_id"] == "after-close"
+                for item in inputs
+            )
+        else:
+            assert result.response.error_code is not None and not lights

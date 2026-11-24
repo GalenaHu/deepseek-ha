@@ -1,14 +1,17 @@
 {
   "domain": "deepseek_ai",
   "name": "DeepSeek AI",
-  "codeowners": [],
+  "codeowners": [
+    "@GalenaHu"
+  ],
   "config_flow": true,
   "dependencies": [
     "conversation"
   ],
-  "documentation": "https://api-docs.deepseek.com/",
+  "documentation": "https://github.com/GalenaHu/deepseek-ha",
   "integration_type": "service",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/GalenaHu/deepseek-ha/issues",
   "requirements": [
     "jsonschema==4.26.0",
     "mutagen==1.48.1"

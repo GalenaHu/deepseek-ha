@@ -59,6 +59,7 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
     )
     for filename in ("LICENSE", "README.md"):
         shutil.copyfile(ROOT / filename, tmp_path / filename)
+    (tmp_path / "test-results.xml").write_text("PRIVATE_RUNNER_METADATA")
     monkeypatch.setattr(module, "ROOT", tmp_path)
     module.build()
     hashes = (tmp_path / "dist/SHA256SUMS").read_text()
@@ -77,5 +78,7 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
                 "__pycache__" in name or ".env" in name or "venv" in name for name in names
             )
             assert archive.testzip() is None
+    with zipfile.ZipFile(tmp_path / "dist/deepseek-ha-0.1.0-source.zip") as archive:
+        assert "deepseek-ha/test-results.xml" not in archive.namelist()
     module.build()
     assert (tmp_path / "dist/SHA256SUMS").read_text() == hashes

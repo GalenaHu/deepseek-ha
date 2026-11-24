@@ -113,23 +113,16 @@ def trim_turns(content: list[conversation.Content], count: int) -> list[conversa
     return system + content[starts[-count] :]
 
 
-async def response_input(
-    runtime: Runtime, log: conversation.ChatLog, options: dict[str, Any]
+async def _input_turn(
+    runtime: Runtime, content: list[conversation.Content], session_id: str, model: str
 ) -> list[dict[str, Any]]:
-    groups: list[list[dict[str, Any]]] = [[]]
-    for item in trim_turns(log.content, options["history_turns"]):
-        if isinstance(item, conversation.UserContent):
-            groups.append([])
-        result = groups[-1]
+    result: list[dict[str, Any]] = []
+    for item in content:
         if isinstance(item, conversation.SystemContent):
             result.append({"role": "system", "content": item.content})
         elif isinstance(item, conversation.UserContent):
             parts = [{"type": "input_text", "text": item.content}]
-            parts.extend(
-                await runtime.attachments.parts(
-                    item.attachments, log.conversation_id, options["model"]
-                )
-            )
+            parts.extend(await runtime.attachments.parts(item.attachments, session_id, model))
             result.append({"role": "user", "content": parts})
         elif isinstance(item, conversation.AssistantContent):
             if isinstance(item.native, list):
@@ -161,17 +154,39 @@ async def response_input(
                     "output": json.dumps(item.result.data, cls=ExtendedJSONEncoder),
                 }
             )
-        while (
-            sum(
-                len(json.dumps(group, ensure_ascii=False, cls=ExtendedJSONEncoder).encode())
-                for group in groups
-            )
-            > MAX_HISTORY_BYTES
-        ):
-            if len(groups) <= 2:
-                raise ApiError("current_turn_too_large")
-            groups.pop(1)
-    return [item for group in groups for item in group]
+    return result
+
+
+async def response_input(
+    runtime: Runtime, log: conversation.ChatLog, options: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Keep the current turn, then add complete recent turns within the budget."""
+    groups: list[list[conversation.Content]] = [[]]
+    for item in trim_turns(log.content, options["history_turns"]):
+        if isinstance(item, conversation.UserContent):
+            groups.append([])
+        groups[-1].append(item)
+
+    async def convert(group: list[conversation.Content]) -> list[dict[str, Any]]:
+        return await _input_turn(runtime, group, log.conversation_id, options["model"])
+
+    def size(group: list[dict[str, Any]]) -> int:
+        return len(json.dumps(group, ensure_ascii=False, cls=ExtendedJSONEncoder).encode())
+
+    system = await convert(groups[0])
+    current = await convert(groups[-1]) if len(groups) > 1 else []
+    used = size(system) + size(current)
+    if used > MAX_HISTORY_BYTES:
+        raise ApiError("current_turn_too_large")
+    selected = [current]
+    for group in reversed(groups[1:-1]):
+        previous = await convert(group)
+        previous_size = size(previous)
+        if used + previous_size > MAX_HISTORY_BYTES:
+            break
+        selected.append(previous)
+        used += previous_size
+    return system + [item for group in reversed(selected) for item in group]
 
 
 def completed_calls(output: list[dict[str, Any]], log: conversation.ChatLog) -> list[llm.ToolInput]:
@@ -336,12 +351,18 @@ async def _run(
                                     and part.get("text")
                                 ):
                                     yield {"thinking_content": part["text"]}
-                        calls = completed_calls(output, log)
-                        if calls and round_index >= options["max_tool_rounds"]:
-                            raise ApiError("tool_round_limit")
-                        yield {"native": output}
-                        if calls:
-                            yield {"tool_calls": calls}
+            # Closing a provider stream can await or fail. No device action may
+            # begin until that close succeeds and this generator can commit the
+            # complete assistant turn to HA without another network await.
+            if final is None:
+                raise ApiError("incomplete_stream")
+            output = final["output"]
+            calls = completed_calls(output, log)
+            if calls and round_index >= options["max_tool_rounds"]:
+                raise ApiError("tool_round_limit")
+            yield {"native": output}
+            if calls:
+                yield {"tool_calls": calls}
 
         async for _ in log.async_add_delta_content_stream(agent_id, deltas()):
             pass

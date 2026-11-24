@@ -141,3 +141,50 @@ async def test_http_timeout_is_sanitized():
         with pytest.raises(ApiError) as error:
             await DeepSeekClient(client, "fake").validate_key()
     assert "PRIVATE" not in str(error.value)
+
+
+async def test_oversized_old_turn_is_dropped_for_short_current_turn(hass, entry, monkeypatch):
+    from homeassistant.core import Context
+    from homeassistant.helpers import llm
+    from homeassistant.helpers.chat_session import async_get_chat_session
+
+    from custom_components.deepseek_ai import engine
+
+    monkeypatch.setattr(engine, "MAX_HISTORY_BYTES", 400)
+    with async_get_chat_session(hass, context=Context()) as session:
+        with conversation.async_get_chat_log(hass, session) as log:
+            log.content = [
+                conversation.SystemContent("system"),
+                conversation.UserContent("old"),
+                conversation.AssistantContent(
+                    "agent", "x" * 500, tool_calls=[llm.ToolInput("toggle", {}, "old-call")]
+                ),
+                conversation.ToolResultContent(
+                    "agent", "old-call", "toggle", llm.ToolResult(data={"ok": True})
+                ),
+                conversation.UserContent("new"),
+            ]
+            result = await engine.response_input(
+                entry.runtime_data, log, {"model": "deepseek-flash", "history_turns": 10}
+            )
+    assert [item["role"] for item in result] == ["system", "user"]
+    assert result[-1]["content"] == [{"type": "input_text", "text": "new"}]
+
+
+async def test_oversized_actual_current_turn_is_rejected(hass, entry, monkeypatch):
+    from homeassistant.core import Context
+    from homeassistant.helpers.chat_session import async_get_chat_session
+
+    from custom_components.deepseek_ai import engine
+
+    monkeypatch.setattr(engine, "MAX_HISTORY_BYTES", 200)
+    with async_get_chat_session(hass, context=Context()) as session:
+        with conversation.async_get_chat_log(hass, session) as log:
+            log.content = [
+                conversation.SystemContent("system"),
+                conversation.UserContent("x" * 300),
+            ]
+            with pytest.raises(ApiError, match="current_turn_too_large"):
+                await engine.response_input(
+                    entry.runtime_data, log, {"model": "deepseek-flash", "history_turns": 10}
+                )
