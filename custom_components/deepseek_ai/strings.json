@@ -1,0 +1,295 @@
+{
+  "title": "DeepSeek AI",
+  "config": {
+    "step": {
+      "user": {
+        "title": "DeepSeek AI",
+        "description": "Official DeepSeek only. Usage is billed to your DeepSeek API account.",
+        "data": {
+          "api_key": "API key",
+          "max_concurrent": "Maximum concurrent jobs"
+        }
+      },
+      "reconfigure": {
+        "title": "DeepSeek AI",
+        "description": "Official DeepSeek only. Usage is billed to your DeepSeek API account.",
+        "data": {
+          "api_key": "API key",
+          "max_concurrent": "Maximum concurrent jobs"
+        }
+      },
+      "reauth_confirm": {
+        "title": "DeepSeek AI",
+        "description": "Official DeepSeek only. Usage is billed to your DeepSeek API account.",
+        "data": {
+          "api_key": "API key",
+          "max_concurrent": "Maximum concurrent jobs"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The API key was rejected.",
+      "cannot_connect": "Could not reach the official DeepSeek API.",
+      "invalid_subtype": "Unsupported function type.",
+      "invalid_model": "Select a supported model and reasoning effort.",
+      "invalid_limits": "A resource limit is invalid.",
+      "invalid_tools": "Invalid tool selection.",
+      "task_tools_forbidden": "Tasks cannot use Home Assistant tools.",
+      "web_tools_conflict": "Remove Home Assistant tools before enabling web access.",
+      "invalid_options": "Invalid options.",
+      "experimental_required": "Acknowledge experimental evaluation before adding it."
+    },
+    "abort": {
+      "reauth_successful": "Credentials updated.",
+      "reconfigure_successful": "Configuration updated."
+    }
+  },
+  "config_subentries": {
+    "conversation": {
+      "entry_type": "Conversation agent",
+      "initiate_flow": {
+        "user": "Add Conversation agent",
+        "reconfigure": "Configure Conversation agent"
+      },
+      "step": {
+        "init": {
+          "title": "Conversation agent",
+          "data": {
+            "name": "Name",
+            "model": "Model",
+            "thinking": "Reasoning effort (none disables thinking)",
+            "prompt": "Instructions template",
+            "max_tokens": "Maximum output tokens, including reasoning",
+            "max_tool_rounds": "Maximum model rounds",
+            "history_turns": "User turns in history",
+            "llm_hass_api": "Home Assistant tools",
+            "web": "Public web search and reading (cannot combine with HA tools)",
+            "voice": "Voice",
+            "timeout": "Network idle timeout (seconds)",
+            "total_timeout": "Total job deadline (seconds)",
+            "acknowledge_experimental": "I understand these estimates are experimental and uncalibrated"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "The API key was rejected.",
+        "cannot_connect": "Could not reach the official DeepSeek API.",
+        "invalid_subtype": "Unsupported function type.",
+        "invalid_model": "Select a supported model and reasoning effort.",
+        "invalid_limits": "A resource limit is invalid.",
+        "invalid_tools": "Invalid tool selection.",
+        "task_tools_forbidden": "Tasks cannot use Home Assistant tools.",
+        "web_tools_conflict": "Remove Home Assistant tools before enabling web access.",
+        "invalid_options": "Invalid options.",
+        "experimental_required": "Acknowledge experimental evaluation before adding it."
+      },
+      "abort": {
+        "reconfigure_successful": "Updated."
+      }
+    },
+    "ai_task": {
+      "entry_type": "AI data task",
+      "initiate_flow": {
+        "user": "Add AI data task",
+        "reconfigure": "Configure AI data task"
+      },
+      "step": {
+        "init": {
+          "title": "AI data task",
+          "data": {
+            "name": "Name",
+            "model": "Model",
+            "thinking": "Reasoning effort (none disables thinking)",
+            "prompt": "Instructions template",
+            "max_tokens": "Maximum output tokens, including reasoning",
+            "max_tool_rounds": "Maximum model rounds",
+            "history_turns": "User turns in history",
+            "llm_hass_api": "Home Assistant tools",
+            "web": "Public web search and reading (cannot combine with HA tools)",
+            "voice": "Voice",
+            "timeout": "Network idle timeout (seconds)",
+            "total_timeout": "Total job deadline (seconds)",
+            "acknowledge_experimental": "I understand these estimates are experimental and uncalibrated"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "The API key was rejected.",
+        "cannot_connect": "Could not reach the official DeepSeek API.",
+        "invalid_subtype": "Unsupported function type.",
+        "invalid_model": "Select a supported model and reasoning effort.",
+        "invalid_limits": "A resource limit is invalid.",
+        "invalid_tools": "Invalid tool selection.",
+        "task_tools_forbidden": "Tasks cannot use Home Assistant tools.",
+        "web_tools_conflict": "Remove Home Assistant tools before enabling web access.",
+        "invalid_options": "Invalid options.",
+        "experimental_required": "Acknowledge experimental evaluation before adding it."
+      },
+      "abort": {
+        "reconfigure_successful": "Updated."
+      }
+    },
+    "evaluation": {
+      "entry_type": "Experimental evaluation",
+      "initiate_flow": {
+        "user": "Add Experimental evaluation",
+        "reconfigure": "Configure Experimental evaluation"
+      },
+      "step": {
+        "init": {
+          "title": "Experimental evaluation",
+          "data": {
+            "name": "Name",
+            "model": "Model",
+            "thinking": "Reasoning effort (none disables thinking)",
+            "prompt": "Instructions template",
+            "max_tokens": "Maximum output tokens, including reasoning",
+            "max_tool_rounds": "Maximum model rounds",
+            "history_turns": "User turns in history",
+            "llm_hass_api": "Home Assistant tools",
+            "web": "Public web search and reading (cannot combine with HA tools)",
+            "voice": "Voice",
+            "timeout": "Network idle timeout (seconds)",
+            "total_timeout": "Total job deadline (seconds)",
+            "acknowledge_experimental": "I understand these estimates are experimental and uncalibrated"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "The API key was rejected.",
+        "cannot_connect": "Could not reach the official DeepSeek API.",
+        "invalid_subtype": "Unsupported function type.",
+        "invalid_model": "Select a supported model and reasoning effort.",
+        "invalid_limits": "A resource limit is invalid.",
+        "invalid_tools": "Invalid tool selection.",
+        "task_tools_forbidden": "Tasks cannot use Home Assistant tools.",
+        "web_tools_conflict": "Remove Home Assistant tools before enabling web access.",
+        "invalid_options": "Invalid options.",
+        "experimental_required": "Acknowledge experimental evaluation before adding it."
+      },
+      "abort": {
+        "reconfigure_successful": "Updated."
+      }
+    },
+    "stt": {
+      "entry_type": "Speech to text",
+      "initiate_flow": {
+        "user": "Add Speech to text",
+        "reconfigure": "Configure Speech to text"
+      },
+      "step": {
+        "init": {
+          "title": "Speech to text",
+          "data": {
+            "name": "Name",
+            "model": "Model",
+            "thinking": "Reasoning effort (none disables thinking)",
+            "prompt": "Instructions template",
+            "max_tokens": "Maximum output tokens, including reasoning",
+            "max_tool_rounds": "Maximum model rounds",
+            "history_turns": "User turns in history",
+            "llm_hass_api": "Home Assistant tools",
+            "web": "Public web search and reading (cannot combine with HA tools)",
+            "voice": "Voice",
+            "timeout": "Network idle timeout (seconds)",
+            "total_timeout": "Total job deadline (seconds)",
+            "acknowledge_experimental": "I understand these estimates are experimental and uncalibrated"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "The API key was rejected.",
+        "cannot_connect": "Could not reach the official DeepSeek API.",
+        "invalid_subtype": "Unsupported function type.",
+        "invalid_model": "Select a supported model and reasoning effort.",
+        "invalid_limits": "A resource limit is invalid.",
+        "invalid_tools": "Invalid tool selection.",
+        "task_tools_forbidden": "Tasks cannot use Home Assistant tools.",
+        "web_tools_conflict": "Remove Home Assistant tools before enabling web access.",
+        "invalid_options": "Invalid options.",
+        "experimental_required": "Acknowledge experimental evaluation before adding it."
+      },
+      "abort": {
+        "reconfigure_successful": "Updated."
+      }
+    },
+    "tts": {
+      "entry_type": "Text to speech",
+      "initiate_flow": {
+        "user": "Add Text to speech",
+        "reconfigure": "Configure Text to speech"
+      },
+      "step": {
+        "init": {
+          "title": "Text to speech",
+          "data": {
+            "name": "Name",
+            "model": "Model",
+            "thinking": "Reasoning effort (none disables thinking)",
+            "prompt": "Instructions template",
+            "max_tokens": "Maximum output tokens, including reasoning",
+            "max_tool_rounds": "Maximum model rounds",
+            "history_turns": "User turns in history",
+            "llm_hass_api": "Home Assistant tools",
+            "web": "Public web search and reading (cannot combine with HA tools)",
+            "voice": "Voice",
+            "timeout": "Network idle timeout (seconds)",
+            "total_timeout": "Total job deadline (seconds)",
+            "acknowledge_experimental": "I understand these estimates are experimental and uncalibrated"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "The API key was rejected.",
+        "cannot_connect": "Could not reach the official DeepSeek API.",
+        "invalid_subtype": "Unsupported function type.",
+        "invalid_model": "Select a supported model and reasoning effort.",
+        "invalid_limits": "A resource limit is invalid.",
+        "invalid_tools": "Invalid tool selection.",
+        "task_tools_forbidden": "Tasks cannot use Home Assistant tools.",
+        "web_tools_conflict": "Remove Home Assistant tools before enabling web access.",
+        "invalid_options": "Invalid options.",
+        "experimental_required": "Acknowledge experimental evaluation before adding it."
+      },
+      "abort": {
+        "reconfigure_successful": "Updated."
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "requests": {
+        "name": "Completed requests"
+      },
+      "input_tokens": {
+        "name": "Input tokens"
+      },
+      "output_tokens": {
+        "name": "Output tokens"
+      },
+      "cached_tokens": {
+        "name": "Cached input tokens"
+      },
+      "reasoning_tokens": {
+        "name": "Reasoning tokens"
+      },
+      "searches": {
+        "name": "Successful searches"
+      },
+      "stt_seconds": {
+        "name": "Recognized audio duration"
+      },
+      "tts_characters": {
+        "name": "Submitted speech characters"
+      },
+      "latency_ms": {
+        "name": "Last completed model latency"
+      }
+    },
+    "button": {
+      "reset_usage": {
+        "name": "Reset usage counters"
+      }
+    }
+  }
+}

@@ -1,0 +1,295 @@
+{
+  "title": "DeepSeek AI",
+  "config": {
+    "step": {
+      "user": {
+        "title": "DeepSeek AI",
+        "description": "仅连接 DeepSeek 官方服务，调用费用由 DeepSeek API 账户承担。",
+        "data": {
+          "api_key": "API 密钥",
+          "max_concurrent": "最大并发任务"
+        }
+      },
+      "reconfigure": {
+        "title": "DeepSeek AI",
+        "description": "仅连接 DeepSeek 官方服务，调用费用由 DeepSeek API 账户承担。",
+        "data": {
+          "api_key": "API 密钥",
+          "max_concurrent": "最大并发任务"
+        }
+      },
+      "reauth_confirm": {
+        "title": "DeepSeek AI",
+        "description": "仅连接 DeepSeek 官方服务，调用费用由 DeepSeek API 账户承担。",
+        "data": {
+          "api_key": "API 密钥",
+          "max_concurrent": "最大并发任务"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "API 密钥无效或已被撤销。",
+      "cannot_connect": "无法连接 DeepSeek 官方 API。",
+      "invalid_subtype": "不支持的功能类型。",
+      "invalid_model": "请选择支持的模型与推理强度。",
+      "invalid_limits": "资源限制设置无效。",
+      "invalid_tools": "工具选择无效。",
+      "task_tools_forbidden": "AI 任务不能使用家庭工具。",
+      "web_tools_conflict": "启用联网前请清空 Home Assistant 工具。",
+      "invalid_options": "配置选项无效。",
+      "experimental_required": "添加前请确认已了解实验性评估的限制。"
+    },
+    "abort": {
+      "reauth_successful": "密钥已更新。",
+      "reconfigure_successful": "配置已更新。"
+    }
+  },
+  "config_subentries": {
+    "conversation": {
+      "entry_type": "对话代理",
+      "initiate_flow": {
+        "user": "添加对话代理",
+        "reconfigure": "配置对话代理"
+      },
+      "step": {
+        "init": {
+          "title": "对话代理",
+          "data": {
+            "name": "名称",
+            "model": "模型",
+            "thinking": "推理强度（none 为关闭）",
+            "prompt": "指令模板",
+            "max_tokens": "最大输出 token（包含推理）",
+            "max_tool_rounds": "最大模型调用轮数",
+            "history_turns": "保留的用户历史轮数",
+            "llm_hass_api": "Home Assistant 工具",
+            "web": "联网搜索与读取（不能与 HA 工具组合）",
+            "voice": "音色",
+            "timeout": "网络空闲超时（秒）",
+            "total_timeout": "任务总时限（秒）",
+            "acknowledge_experimental": "我了解评估结果是实验性的、未经校准的模型估计"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "API 密钥无效或已被撤销。",
+        "cannot_connect": "无法连接 DeepSeek 官方 API。",
+        "invalid_subtype": "不支持的功能类型。",
+        "invalid_model": "请选择支持的模型与推理强度。",
+        "invalid_limits": "资源限制设置无效。",
+        "invalid_tools": "工具选择无效。",
+        "task_tools_forbidden": "AI 任务不能使用家庭工具。",
+        "web_tools_conflict": "启用联网前请清空 Home Assistant 工具。",
+        "invalid_options": "配置选项无效。",
+        "experimental_required": "添加前请确认已了解实验性评估的限制。"
+      },
+      "abort": {
+        "reconfigure_successful": "已更新。"
+      }
+    },
+    "ai_task": {
+      "entry_type": "AI 数据任务",
+      "initiate_flow": {
+        "user": "添加AI 数据任务",
+        "reconfigure": "配置AI 数据任务"
+      },
+      "step": {
+        "init": {
+          "title": "AI 数据任务",
+          "data": {
+            "name": "名称",
+            "model": "模型",
+            "thinking": "推理强度（none 为关闭）",
+            "prompt": "指令模板",
+            "max_tokens": "最大输出 token（包含推理）",
+            "max_tool_rounds": "最大模型调用轮数",
+            "history_turns": "保留的用户历史轮数",
+            "llm_hass_api": "Home Assistant 工具",
+            "web": "联网搜索与读取（不能与 HA 工具组合）",
+            "voice": "音色",
+            "timeout": "网络空闲超时（秒）",
+            "total_timeout": "任务总时限（秒）",
+            "acknowledge_experimental": "我了解评估结果是实验性的、未经校准的模型估计"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "API 密钥无效或已被撤销。",
+        "cannot_connect": "无法连接 DeepSeek 官方 API。",
+        "invalid_subtype": "不支持的功能类型。",
+        "invalid_model": "请选择支持的模型与推理强度。",
+        "invalid_limits": "资源限制设置无效。",
+        "invalid_tools": "工具选择无效。",
+        "task_tools_forbidden": "AI 任务不能使用家庭工具。",
+        "web_tools_conflict": "启用联网前请清空 Home Assistant 工具。",
+        "invalid_options": "配置选项无效。",
+        "experimental_required": "添加前请确认已了解实验性评估的限制。"
+      },
+      "abort": {
+        "reconfigure_successful": "已更新。"
+      }
+    },
+    "evaluation": {
+      "entry_type": "实验性评估",
+      "initiate_flow": {
+        "user": "添加实验性评估",
+        "reconfigure": "配置实验性评估"
+      },
+      "step": {
+        "init": {
+          "title": "实验性评估",
+          "data": {
+            "name": "名称",
+            "model": "模型",
+            "thinking": "推理强度（none 为关闭）",
+            "prompt": "指令模板",
+            "max_tokens": "最大输出 token（包含推理）",
+            "max_tool_rounds": "最大模型调用轮数",
+            "history_turns": "保留的用户历史轮数",
+            "llm_hass_api": "Home Assistant 工具",
+            "web": "联网搜索与读取（不能与 HA 工具组合）",
+            "voice": "音色",
+            "timeout": "网络空闲超时（秒）",
+            "total_timeout": "任务总时限（秒）",
+            "acknowledge_experimental": "我了解评估结果是实验性的、未经校准的模型估计"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "API 密钥无效或已被撤销。",
+        "cannot_connect": "无法连接 DeepSeek 官方 API。",
+        "invalid_subtype": "不支持的功能类型。",
+        "invalid_model": "请选择支持的模型与推理强度。",
+        "invalid_limits": "资源限制设置无效。",
+        "invalid_tools": "工具选择无效。",
+        "task_tools_forbidden": "AI 任务不能使用家庭工具。",
+        "web_tools_conflict": "启用联网前请清空 Home Assistant 工具。",
+        "invalid_options": "配置选项无效。",
+        "experimental_required": "添加前请确认已了解实验性评估的限制。"
+      },
+      "abort": {
+        "reconfigure_successful": "已更新。"
+      }
+    },
+    "stt": {
+      "entry_type": "语音识别",
+      "initiate_flow": {
+        "user": "添加语音识别",
+        "reconfigure": "配置语音识别"
+      },
+      "step": {
+        "init": {
+          "title": "语音识别",
+          "data": {
+            "name": "名称",
+            "model": "模型",
+            "thinking": "推理强度（none 为关闭）",
+            "prompt": "指令模板",
+            "max_tokens": "最大输出 token（包含推理）",
+            "max_tool_rounds": "最大模型调用轮数",
+            "history_turns": "保留的用户历史轮数",
+            "llm_hass_api": "Home Assistant 工具",
+            "web": "联网搜索与读取（不能与 HA 工具组合）",
+            "voice": "音色",
+            "timeout": "网络空闲超时（秒）",
+            "total_timeout": "任务总时限（秒）",
+            "acknowledge_experimental": "我了解评估结果是实验性的、未经校准的模型估计"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "API 密钥无效或已被撤销。",
+        "cannot_connect": "无法连接 DeepSeek 官方 API。",
+        "invalid_subtype": "不支持的功能类型。",
+        "invalid_model": "请选择支持的模型与推理强度。",
+        "invalid_limits": "资源限制设置无效。",
+        "invalid_tools": "工具选择无效。",
+        "task_tools_forbidden": "AI 任务不能使用家庭工具。",
+        "web_tools_conflict": "启用联网前请清空 Home Assistant 工具。",
+        "invalid_options": "配置选项无效。",
+        "experimental_required": "添加前请确认已了解实验性评估的限制。"
+      },
+      "abort": {
+        "reconfigure_successful": "已更新。"
+      }
+    },
+    "tts": {
+      "entry_type": "语音合成",
+      "initiate_flow": {
+        "user": "添加语音合成",
+        "reconfigure": "配置语音合成"
+      },
+      "step": {
+        "init": {
+          "title": "语音合成",
+          "data": {
+            "name": "名称",
+            "model": "模型",
+            "thinking": "推理强度（none 为关闭）",
+            "prompt": "指令模板",
+            "max_tokens": "最大输出 token（包含推理）",
+            "max_tool_rounds": "最大模型调用轮数",
+            "history_turns": "保留的用户历史轮数",
+            "llm_hass_api": "Home Assistant 工具",
+            "web": "联网搜索与读取（不能与 HA 工具组合）",
+            "voice": "音色",
+            "timeout": "网络空闲超时（秒）",
+            "total_timeout": "任务总时限（秒）",
+            "acknowledge_experimental": "我了解评估结果是实验性的、未经校准的模型估计"
+          }
+        }
+      },
+      "error": {
+        "invalid_auth": "API 密钥无效或已被撤销。",
+        "cannot_connect": "无法连接 DeepSeek 官方 API。",
+        "invalid_subtype": "不支持的功能类型。",
+        "invalid_model": "请选择支持的模型与推理强度。",
+        "invalid_limits": "资源限制设置无效。",
+        "invalid_tools": "工具选择无效。",
+        "task_tools_forbidden": "AI 任务不能使用家庭工具。",
+        "web_tools_conflict": "启用联网前请清空 Home Assistant 工具。",
+        "invalid_options": "配置选项无效。",
+        "experimental_required": "添加前请确认已了解实验性评估的限制。"
+      },
+      "abort": {
+        "reconfigure_successful": "已更新。"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "requests": {
+        "name": "已完成请求"
+      },
+      "input_tokens": {
+        "name": "输入 token"
+      },
+      "output_tokens": {
+        "name": "输出 token"
+      },
+      "cached_tokens": {
+        "name": "命中缓存的输入 token"
+      },
+      "reasoning_tokens": {
+        "name": "推理 token"
+      },
+      "searches": {
+        "name": "成功搜索次数"
+      },
+      "stt_seconds": {
+        "name": "已识别音频时长"
+      },
+      "tts_characters": {
+        "name": "已提交合成字符"
+      },
+      "latency_ms": {
+        "name": "最近完成的模型请求耗时"
+      }
+    },
+    "button": {
+      "reset_usage": {
+        "name": "重置用量统计"
+      }
+    }
+  }
+}
