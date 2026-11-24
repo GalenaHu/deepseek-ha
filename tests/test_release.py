@@ -41,7 +41,7 @@ def test_manifest_and_hacs_metadata():
     assert manifest["integration_type"] == "service" and manifest["config_flow"]
     assert manifest["iot_class"] == "cloud_polling"
     assert manifest["requirements"] == ["jsonschema==4.26.0", "mutagen==1.48.1"]
-    assert hacs["homeassistant"] == "2026.11.3" and hacs["zip_release"]
+    assert hacs["homeassistant"] == "2026.11.2" and hacs["zip_release"]
     assert hacs["filename"] == "deepseek_ai.zip"
 
 
@@ -68,7 +68,7 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
         assert hashlib.sha256((tmp_path / "dist" / filename).read_bytes()).hexdigest() == digest
     for filename, prefix in (
         ("deepseek_ai.zip", ""),
-        ("deepseek_ai-0.1.0-manual.zip", "custom_components/deepseek_ai/"),
+        ("deepseek_ai-0.1.1-manual.zip", "custom_components/deepseek_ai/"),
     ):
         with zipfile.ZipFile(tmp_path / "dist" / filename) as archive:
             names = archive.namelist()
@@ -78,7 +78,7 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
                 "__pycache__" in name or ".env" in name or "venv" in name for name in names
             )
             assert archive.testzip() is None
-    with zipfile.ZipFile(tmp_path / "dist/deepseek-ha-0.1.0-source.zip") as archive:
+    with zipfile.ZipFile(tmp_path / "dist/deepseek-ha-0.1.1-source.zip") as archive:
         assert "deepseek-ha/test-results.xml" not in archive.namelist()
     module.build()
     assert (tmp_path / "dist/SHA256SUMS").read_text() == hashes

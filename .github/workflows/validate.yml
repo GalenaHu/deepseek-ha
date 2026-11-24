@@ -8,6 +8,10 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ha-version: ["2026.11.2", "2026.11.3"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,6 +20,8 @@ jobs:
           cache: pip
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg libturbojpeg
       - run: python -m pip install -r requirements_test.txt
+      - if: matrix.ha-version != '2026.11.2'
+        run: python -m pip install "homeassistant==${{ matrix.ha-version }}" "pytest-homeassistant==${{ matrix.ha-version }}"
       - run: python -m pip check
       - run: ruff check custom_components tests scripts
       - run: ruff format --check custom_components tests scripts
@@ -24,16 +30,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: home-assistant/core
-          ref: '2026.11.3'
+          ref: ${{ matrix.ha-version }}
           path: _ha-core
           sparse-checkout: |
             script/hassfest
             packages/hassfest
-      - run: python scripts/check_metadata.py --ha-source _ha-core
+      - run: python scripts/check_metadata.py --ha-source _ha-core --ha-version "${{ matrix.ha-version }}"
       - run: python scripts/package.py
       - uses: actions/upload-artifact@v4
         with:
-          name: deepseek-ai-installers
+          name: deepseek-ai-installers-${{ matrix.ha-version }}
           path: |
             dist/*.zip
             dist/SHA256SUMS

@@ -1,10 +1,10 @@
 # DeepSeek AI for Home Assistant
 
-全新独立的 Home Assistant 自定义集成，domain：`deepseek_ai`。最低版本 **HA 2026.11.3**。只连接 DeepSeek 官方 HTTPS/WSS 服务；无需 OpenAI 账户。
+全新独立的 Home Assistant 自定义集成，domain：`deepseek_ai`。最低版本 **HA 2026.11.2**。只连接 DeepSeek 官方 HTTPS/WSS 服务；无需 OpenAI 账户。
 
 ## 安装
 
-1. 解压 `deepseek_ai-0.1.0-manual.zip` 到 HA 的 `/config/`，确认存在 `/config/custom_components/deepseek_ai/manifest.json`。
+1. 解压 `deepseek_ai-0.1.1-manual.zip` 到 HA 的 `/config/`，确认存在 `/config/custom_components/deepseek_ai/manifest.json`。
 2. 重启 HA，进入「设置 → 设备与服务 → 添加集成」，搜索 **DeepSeek AI**。
 3. 输入 DeepSeek API Key。验证使用 `/models`，不产生模型生成请求。
 4. 默认创建对话、AI 数据任务、语音识别、语音合成四个子项。可继续添加多个独立子项，在各子项菜单中重新配置。
@@ -97,13 +97,16 @@ python3.14 -m venv .venv
 .venv/bin/python -m ruff check custom_components tests scripts
 .venv/bin/python -m ruff format --check custom_components tests scripts
 .venv/bin/python -m mypy custom_components/deepseek_ai
-.venv/bin/python scripts/check_metadata.py --ha-source /path/to/core-2026.11.3
+.venv/bin/python scripts/check_metadata.py --ha-source /path/to/core-2026.11.2
 .venv/bin/python scripts/package.py
 ```
 
 测试摄像头依赖系统 FFmpeg、libturbojpeg；测试语音会在本机回环地址启动模拟服务。配置、会话、权限与服务使用真实HA，外部DeepSeek通信全部模拟。CI配置位于 `.github/workflows/validate.yml`，推送后 GitHub Actions 会执行同样的验证并生成可下载安装附件；实际远程运行结果以仓库 Actions 页面为准。
 
-`dist/deepseek_ai-0.1.0-manual.zip` 为手动安装包，`dist/deepseek_ai.zip` 为 HACS release asset，`dist/deepseek-ha-0.1.0-source.zip` 为源码、测试和指南。校验值见 `dist/SHA256SUMS`。安装包不含虚拟环境、API Key、测试缓存或用户HA配置。
+`dist/deepseek_ai-0.1.1-manual.zip` 为手动安装包，`dist/deepseek_ai.zip` 为 HACS release asset，`dist/deepseek-ha-0.1.1-source.zip` 为源码、测试和指南。校验值见 `dist/SHA256SUMS`。安装包不含虚拟环境、API Key、测试缓存或用户HA配置。
 
 
 接口依据：[Responses API](https://api-docs.deepseek.com/api/create-response/)、[文件解析](https://api-docs.deepseek.com/guides/document_parsing/)、[Search & Fetch](https://api-docs.deepseek.com/guides/search/)、[语音识别](https://api-docs.deepseek.com/guides/asr/)、[语音合成](https://api-docs.deepseek.com/guides/tts/)。接口封装以本次核实的公开文档为准，真实 API 行为仍需安装后验证。
+
+
+从旧版更新时，HACS 元数据和集成运行时代码都需要更新。v0.1.1 将两处最低版本统一为2026.11.2。若 HACS仍提示需要2026.11.3，在HACS中刷新仓库信息并重新下载新版本；手动安装则用新包覆盖 `/config/custom_components/deepseek_ai/` 后重启HA。仅修改远端 `hacs.json` 不会替换 HA已经加载的Python代码。

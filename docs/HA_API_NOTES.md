@@ -2,7 +2,7 @@
 
 Checked 2026-11-24 for `deepseek_ai`. Python environment: `.venv/bin/python` → `.venv/bin/python3.14` → `/Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14`.
 
-**Version boundary:** signatures verified against official Core **2026.11.3**, commit `92da9f154079459b9e547126f9bd9fce726de16a`, and the installed real package. Executed tests use `homeassistant==2026.11.3` plus official `pytest-homeassistant==2026.11.3`. No live provider requests were made.
+**Version boundary:** the initial interface investigation used Core **2026.11.3**, commit `92da9f154079459b9e547126f9bd9fce726de16a`. Minimum support is now **2026.11.2**, commit `ff5d56b825a0fb66b03d01bc297d49e206cdaba3`: the complete 96-test suite, native setup and all AI/speech hooks were executed using real `homeassistant==2026.11.2` and `pytest-homeassistant==2026.11.2`. The signatures documented below remain compatible. CI runs both patch versions. No live provider requests were made.
 
 ## Conversation and provider state
 
@@ -70,12 +70,12 @@ Set `EVALUATE | SUPPORT_ATTACHMENTS` only on opt-in experimental evaluation enti
 
 ## Exact-version test environment
 
-The legacy `pytest-homeassistant-custom-component` release pins an older HA version. This project instead uses the new official `pytest-homeassistant==2026.11.3`, whose entry point loads genuine HA fixtures, registries, storage, authentication, entities and services. Our fixture provides an isolated temporary configuration directory with a `custom_components` symlink and initializes the native `homeassistant` component before conversation setup. It substitutes only the remote provider HTTP/SSE/WebSocket boundary. No HA replacement stubs, dependency fallbacks, or silently skipped tests are used.
+The legacy `pytest-homeassistant-custom-component` release pins an older HA version. This project instead uses the new official `pytest-homeassistant==2026.11.2` baseline, whose entry point loads genuine HA fixtures, registries, storage, authentication, entities and services. Our fixture provides an isolated temporary configuration directory with a `custom_components` symlink and initializes the native `homeassistant` component before conversation setup. It substitutes only the remote provider HTTP/SSE/WebSocket boundary. No HA replacement stubs, dependency fallbacks, or silently skipped tests are used.
 
 Local WebSocket tests bind only `127.0.0.1`; a transport adapter maps the official URL to that local server and retains the logical provider origin. This adapter lives only in tests. Production cannot configure a custom endpoint. Malicious-origin tests assert that no text is sent after an unexpected handshake origin.
 
 Camera tests use the real camera component and media-source resolver with a test camera returning a generated PNG. Ogg Opus tests use locally generated silence. No actual microphone, camera, speaker or home device is contacted.
 
-Official exact-tag hassfest plugins are run by `scripts/check_metadata.py --ha-source /path/to/core-2026.11.3` against the installed target package. Selected plugins: manifest, JSON, config schema, integration type, translations and config flow. Source checkout must include `script/hassfest` and `packages/hassfest`; the checker is not replaced or rewritten.
+Official exact-tag hassfest plugins are run by `scripts/check_metadata.py --ha-source /path/to/core-2026.11.2` against the installed target package. Selected plugins: manifest, JSON, config schema, integration type, translations and config flow. Source checkout must include `script/hassfest` and `packages/hassfest`; the checker is not replaced or rewritten.
 
 [Official helper package](https://github.com/home-assistant/core/tree/92da9f154079459b9e547126f9bd9fce726de16a/packages/pytest-homeassistant), [official hassfest source](https://github.com/home-assistant/core/tree/92da9f154079459b9e547126f9bd9fce726de16a/script/hassfest)

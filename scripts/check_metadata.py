@@ -12,9 +12,10 @@ from homeassistant.const import __version__ as HA_VERSION
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ha-source", required=True, type=Path)
+    parser.add_argument("--ha-version", default="2026.11.2", choices=("2026.11.2", "2026.11.3"))
     args = parser.parse_args()
-    if HA_VERSION != "2026.11.3":
-        parser.error("Install homeassistant==2026.11.3 for baseline metadata validation")
+    if HA_VERSION != args.ha_version:
+        parser.error(f"Install homeassistant=={args.ha_version} for metadata validation")
     source = args.ha_source.resolve()
     if not (source / "script/hassfest/__main__.py").is_file():
         parser.error("HA source must include script/hassfest and packages/hassfest")

@@ -1,16 +1,16 @@
-# v0.1.0 验证结果
+# v0.1.1 验证结果
 
 验证日期：2026-11-24（Asia/Shanghai）。本次验证在隔离工作区进行，没有修改现有 HA，没有使用真实 DeepSeek API Key，也没有连接家庭设备。后续用户已授权将源码推送至个人账号 GalenaHu 的私有 GitHub 仓库；不创建 Release。
 
 ## 环境与结果
 
-- Python **3.14.7**，真实 `homeassistant==2026.11.3`。
-- 官方 `pytest-homeassistant==2026.11.3`；不使用锁定旧版 HA 的旧测试插件。
-- 完整测试：**92 passed，0 failed，0 skipped**，7.31 秒。
+- Python **3.14.7**，真实 `homeassistant==2026.11.2`。
+- 官方 `pytest-homeassistant==2026.11.2`；不使用锁定旧版 HA 的旧测试插件。
+- 完整测试：**96 passed，0 failed，0 skipped**，7.38 秒。
 - Ruff 代码检查与格式检查通过。
 - Mypy：**20个集成源文件无类型错误**，包含真实 HA 公共钩子签名检查。
 - `pip check`：无损坏依赖。
-- 官方 HA **2026.11.3** hassfest 源码六项检查通过：`manifest,json,config_schema,integration_type,translations,config_flow`；**Invalid integrations: 0**。不是全部 Core 仓库检查。
+- 官方 HA **2026.11.2** hassfest 源码六项检查通过：`manifest,json,config_schema,integration_type,translations,config_flow`；**Invalid integrations: 0**。不是全部 Core 仓库检查。
 - ZIP 内容、SHA-256与重复构建一致性测试通过；交付校验值见 `dist/SHA256SUMS`。
 
 逐项机器可读记录见 [TEST_RESULTS.json](TEST_RESULTS.json)。
@@ -50,20 +50,25 @@ HTTP与SSE使用 `httpx2.MockTransport`；WebSocket在 `127.0.0.1` 启动真实�
 .venv/bin/python -m ruff format --check custom_components tests scripts
 .venv/bin/python -m mypy custom_components/deepseek_ai
 .venv/bin/python -m pip check
-.venv/bin/python scripts/check_metadata.py --ha-source /path/to/core-2026.11.3
+.venv/bin/python scripts/check_metadata.py --ha-source /path/to/core-2026.11.2
 .venv/bin/python scripts/package.py
 ```
 
-官方源码精确提交：`92da9f154079459b9e547126f9bd9fce726de16a`。如使用稀疏检出，包含 `script/hassfest`、`packages/hassfest` 即可；脚本从已安装的真实 HA 包获取平台与集成元数据。
+官方源码精确提交：`ff5d56b825a0fb66b03d01bc297d49e206cdaba3`。如使用稀疏检出，包含 `script/hassfest`、`packages/hassfest` 即可；脚本从已安装的真实 HA 包获取平台与集成元数据。
 
 ## 未验证范围与限制
 
 **模拟接口验证通过；真实 DeepSeek API和设备尚未验证。** 未验证真实 Key权限、服务可用性、计费、模型回答质量、文档/OCR效果、语音自然度、家庭设备执行，以及具体音箱/语音卫星的播放兼容性。GitHub Actions 会在源码推送后触发，远程运行状态以仓库 Actions 页面为准。
 
-仅验证 HA 2026.11.3；更高版本需要持续兼容测试。首次部署后应显式选择少量实体进行实际验收。实验性评估为结构化生成的未经校准估计，不是供应商原生决策接口。
+当前最低版本基线为 HA 2026.11.2；CI 同时对2026.11.2与2026.11.3执行完整验证，更高版本仍需持续兼容测试。首次部署后应显式选择少量实体进行实际验收。实验性评估为结构化生成的未经校准估计，不是供应商原生决策接口。
 
 TTS完整文本与流式入口都通过官方 WebSocket校验结束事件；未实现单独 HTTP POST朗读后端。HA的 `tts.speak` 与 Assist 通过原生 TTS实体接口使用它。
 
 关闭请求不能撤销已经发出的物理动作。会话历史包含已完成工具结果，中断且无法确认的动作标记为未知；不自动重试。上传补偿清理依赖本地所有权日志及有效凭据，失败记录会保留供下次加载重试。
 
 加载期间原生对话 DEBUG日志全局脱敏的范围、HA自身会话/追踪仍然保留的行为见 README。源码目标仓库为 GalenaHu/deepseek-ha（私有）；HACS目录与附件已准备，在线安装还需要后续发布 Release 及配置访问权限。
+
+
+## 最低版本修复
+
+保留用户将 `hacs.json` 最低版本改为2026.11.2的提交，并同步运行时 `MIN_HA`、开发依赖、文档及CI。此前仅改HACS元数据，Python运行时仍保留2026.11.3门槛；原生配置条目加载回归已复现并验证修复。另增加HACS/运行时版本一致性断言，防止再次漂移。集成版本升为0.1.1，安装后需要重启HA使新代码生效。

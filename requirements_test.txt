@@ -1,5 +1,5 @@
-homeassistant==2026.11.3
-pytest-homeassistant==2026.11.3
+homeassistant==2026.11.2
+pytest-homeassistant==2026.11.2
 pytest==9.0.3
 pytest-asyncio==1.4.0
 pytest-aiohttp==1.1.1

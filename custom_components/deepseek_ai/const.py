@@ -4,8 +4,8 @@ from homeassistant.const import Platform
 
 DOMAIN = "deepseek_ai"
 NAME = "DeepSeek AI"
-VERSION = "0.1.0"
-MIN_HA = "2026.11.3"
+VERSION = "0.1.1"
+MIN_HA = "2026.11.2"
 API_ROOT = "https://api.deepseek.com"
 TTS_URL = "wss://api.deepseek.com/v1/tools/tts?format=pcm"
 MODELS = ["deepseek-flash", "deepseek-v4-pro"]

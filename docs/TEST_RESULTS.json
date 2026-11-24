@@ -1,14 +1,14 @@
 {
   "date": "2026-11-24",
   "timezone": "Asia/Shanghai",
-  "homeassistant": "2026.11.3",
-  "pytest_homeassistant": "2026.11.3",
+  "homeassistant": "2026.11.2",
+  "pytest_homeassistant": "2026.11.2",
   "python": "3.14.7",
-  "tests": 92,
+  "tests": 96,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
-  "seconds": 7.314,
+  "seconds": 7.384,
   "provider": "simulated HTTP/SSE and localhost WebSocket",
   "real_api_verified": false,
   "real_devices_verified": false,
@@ -16,7 +16,7 @@
     {
       "module": "tests.test_api.ApiTests",
       "name": "test_completed_stream_and_usage",
-      "seconds": 0.071
+      "seconds": 0.067
     },
     {
       "module": "tests.test_api.ApiTests",
@@ -26,72 +26,72 @@
     {
       "module": "tests.test_api.ApiTests",
       "name": "test_stream_requires_successful_terminal_event",
-      "seconds": 0.004
+      "seconds": 0.003
     },
     {
       "module": "tests.test_attachments",
       "name": "test_native_task_image_document_and_full_schema",
-      "seconds": 0.226
+      "seconds": 0.208
     },
     {
       "module": "tests.test_attachments",
       "name": "test_file_type_selects_official_parser[.txt-user_data]",
-      "seconds": 0.112
+      "seconds": 0.106
     },
     {
       "module": "tests.test_attachments",
       "name": "test_file_type_selects_official_parser[.xlsx-user_data]",
-      "seconds": 0.139
+      "seconds": 0.104
     },
     {
       "module": "tests.test_attachments",
       "name": "test_file_type_selects_official_parser[.pdf-rich_layout_recognition]",
-      "seconds": 0.124
+      "seconds": 0.106
     },
     {
       "module": "tests.test_attachments",
       "name": "test_file_type_selects_official_parser[.docx-rich_layout_recognition]",
-      "seconds": 0.121
+      "seconds": 0.098
     },
     {
       "module": "tests.test_attachments",
       "name": "test_invalid_attachments_rejected_before_network[size]",
-      "seconds": 0.131
-    },
-    {
-      "module": "tests.test_attachments",
-      "name": "test_invalid_attachments_rejected_before_network[symlink]",
-      "seconds": 0.095
-    },
-    {
-      "module": "tests.test_attachments",
-      "name": "test_invalid_attachments_rejected_before_network[type]",
-      "seconds": 0.106
-    },
-    {
-      "module": "tests.test_attachments",
-      "name": "test_invalid_attachments_rejected_before_network[model]",
-      "seconds": 0.106
-    },
-    {
-      "module": "tests.test_attachments",
-      "name": "test_invalid_attachments_rejected_before_network[count]",
-      "seconds": 0.106
-    },
-    {
-      "module": "tests.test_attachments",
-      "name": "test_lost_upload_reply_recovered_without_deleting_other_files",
       "seconds": 0.11
     },
     {
       "module": "tests.test_attachments",
-      "name": "test_cleanup_failure_retains_ownership_for_retry",
+      "name": "test_invalid_attachments_rejected_before_network[symlink]",
       "seconds": 0.111
     },
     {
       "module": "tests.test_attachments",
+      "name": "test_invalid_attachments_rejected_before_network[type]",
+      "seconds": 0.109
+    },
+    {
+      "module": "tests.test_attachments",
+      "name": "test_invalid_attachments_rejected_before_network[model]",
+      "seconds": 0.105
+    },
+    {
+      "module": "tests.test_attachments",
+      "name": "test_invalid_attachments_rejected_before_network[count]",
+      "seconds": 0.112
+    },
+    {
+      "module": "tests.test_attachments",
+      "name": "test_lost_upload_reply_recovered_without_deleting_other_files",
+      "seconds": 0.112
+    },
+    {
+      "module": "tests.test_attachments",
+      "name": "test_cleanup_failure_retains_ownership_for_retry",
+      "seconds": 0.107
+    },
+    {
+      "module": "tests.test_attachments",
       "name": "test_native_camera_snapshot_media_resolution",
-      "seconds": 0.23
+      "seconds": 0.258
     },
     {
       "module": "tests.test_contracts",
@@ -156,7 +156,7 @@
     {
       "module": "tests.test_contracts",
       "name": "test_json_nonfinite_and_duplicate_values_fail[{\"number\":1,\"number\":2}]",
-      "seconds": 0.002
+      "seconds": 0.003
     },
     {
       "module": "tests.test_contracts",
@@ -181,7 +181,7 @@
     {
       "module": "tests.test_contracts",
       "name": "test_evaluation_rejects_invalid_range_distribution_or_consistency[choice-data2]",
-      "seconds": 0.002
+      "seconds": 0.003
     },
     {
       "module": "tests.test_contracts",
@@ -191,7 +191,7 @@
     {
       "module": "tests.test_contracts",
       "name": "test_evaluation_rejects_invalid_range_distribution_or_consistency[choice-data4]",
-      "seconds": 0.002
+      "seconds": 0.003
     },
     {
       "module": "tests.test_contracts",
@@ -211,32 +211,32 @@
     {
       "module": "tests.test_evaluation_web",
       "name": "test_web_agent_calls_only_official_search_and_returns_sources",
-      "seconds": 0.119
+      "seconds": 0.124
     },
     {
       "module": "tests.test_evaluation_web",
       "name": "test_native_task_missing_field_and_bad_json_fail[{}]",
-      "seconds": 0.117
+      "seconds": 0.111
     },
     {
       "module": "tests.test_evaluation_web",
       "name": "test_native_task_missing_field_and_bad_json_fail[{\"answer\":\"wrong\"}]",
-      "seconds": 0.114
-    },
-    {
-      "module": "tests.test_evaluation_web",
-      "name": "test_native_task_missing_field_and_bad_json_fail[not json]",
-      "seconds": 0.117
-    },
-    {
-      "module": "tests.test_evaluation_web",
-      "name": "test_task_refusal_or_truncation_never_succeeds[refusal]",
       "seconds": 0.116
     },
     {
       "module": "tests.test_evaluation_web",
+      "name": "test_native_task_missing_field_and_bad_json_fail[not json]",
+      "seconds": 0.11
+    },
+    {
+      "module": "tests.test_evaluation_web",
+      "name": "test_task_refusal_or_truncation_never_succeeds[refusal]",
+      "seconds": 0.112
+    },
+    {
+      "module": "tests.test_evaluation_web",
       "name": "test_task_refusal_or_truncation_never_succeeds[incomplete]",
-      "seconds": 0.106
+      "seconds": 0.112
     },
     {
       "module": "tests.test_limits",
@@ -246,7 +246,7 @@
     {
       "module": "tests.test_limits",
       "name": "test_cancellation_propagates_and_closes_stream",
-      "seconds": 0.005
+      "seconds": 0.004
     },
     {
       "module": "tests.test_limits",
@@ -266,7 +266,7 @@
     {
       "module": "tests.test_limits",
       "name": "test_native_deadline_is_failure_and_cleans_job",
-      "seconds": 0.131
+      "seconds": 0.116
     },
     {
       "module": "tests.test_limits",
@@ -276,37 +276,37 @@
     {
       "module": "tests.test_limits",
       "name": "test_oversized_old_turn_is_dropped_for_short_current_turn",
-      "seconds": 0.112
+      "seconds": 0.108
     },
     {
       "module": "tests.test_limits",
       "name": "test_oversized_actual_current_turn_is_rejected",
-      "seconds": 0.111
+      "seconds": 0.106
     },
     {
       "module": "tests.test_native",
       "name": "test_setup_native_generation_and_diagnostics",
-      "seconds": 0.12
+      "seconds": 0.105
     },
     {
       "module": "tests.test_native",
       "name": "test_structured_wrong_type_fails_without_logging_payload",
-      "seconds": 0.118
+      "seconds": 0.112
     },
     {
       "module": "tests.test_native",
       "name": "test_reauth_reconfigure_and_subentry_conflict",
-      "seconds": 0.127
+      "seconds": 0.131
     },
     {
       "module": "tests.test_native",
       "name": "test_no_home_tools_conversation_and_multiturn",
-      "seconds": 0.119
+      "seconds": 0.124
     },
     {
       "module": "tests.test_native",
       "name": "test_reconfigure_credential_and_multiple_subentries",
-      "seconds": 0.167
+      "seconds": 0.175
     },
     {
       "module": "tests.test_native",
@@ -316,17 +316,17 @@
     {
       "module": "tests.test_native",
       "name": "test_usage_reset_native_button_and_reload_persistence",
-      "seconds": 0.117
+      "seconds": 0.118
     },
     {
       "module": "tests.test_native",
       "name": "test_provider_auth_failure_starts_native_reauth",
-      "seconds": 0.116
+      "seconds": 0.114
     },
     {
       "module": "tests.test_release",
       "name": "test_translations_cover_config_subentries_and_entities",
-      "seconds": 0.006
+      "seconds": 0.007
     },
     {
       "module": "tests.test_release",
@@ -336,142 +336,162 @@
     {
       "module": "tests.test_release",
       "name": "test_install_archives_are_complete_and_repeatable",
-      "seconds": 0.035
+      "seconds": 0.03
     },
     {
       "module": "tests.test_tools",
       "name": "test_unexposed_entity_cannot_be_controlled",
-      "seconds": 0.125
+      "seconds": 0.115
     },
     {
       "module": "tests.test_tools",
       "name": "test_tools_after_success_are_not_replayed_on_network_failure",
-      "seconds": 0.131
+      "seconds": 0.119
     },
     {
       "module": "tests.test_tools",
       "name": "test_failed_stream_never_executes_actions[response.incomplete]",
-      "seconds": 0.12
+      "seconds": 0.118
     },
     {
       "module": "tests.test_tools",
       "name": "test_failed_stream_never_executes_actions[response.failed]",
-      "seconds": 0.118
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_admin_tool_api_enforces_real_user_context[none]",
-      "seconds": 0.123
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_admin_tool_api_enforces_real_user_context[ordinary]",
-      "seconds": 0.128
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_admin_tool_api_enforces_real_user_context[admin]",
-      "seconds": 0.132
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_unload_cancels_active_sse_before_any_tool_action",
-      "seconds": 0.111
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_parallel_tool_cancel_preserves_completed_result_and_stops_siblings",
-      "seconds": 0.133
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_demoted_admin_cannot_reuse_cached_tool_api",
-      "seconds": 0.126
-    },
-    {
-      "module": "tests.test_tools",
-      "name": "test_provider_stream_closes_before_tool_execution[success]",
       "seconds": 0.122
     },
     {
       "module": "tests.test_tools",
-      "name": "test_provider_stream_closes_before_tool_execution[failure]",
+      "name": "test_admin_tool_api_enforces_real_user_context[none]",
       "seconds": 0.118
     },
     {
       "module": "tests.test_tools",
-      "name": "test_provider_stream_closes_before_tool_execution[cancel]",
+      "name": "test_admin_tool_api_enforces_real_user_context[ordinary]",
+      "seconds": 0.119
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_admin_tool_api_enforces_real_user_context[admin]",
+      "seconds": 0.121
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_unload_cancels_active_sse_before_any_tool_action",
+      "seconds": 0.117
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_parallel_tool_cancel_preserves_completed_result_and_stops_siblings",
       "seconds": 0.118
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_demoted_admin_cannot_reuse_cached_tool_api",
+      "seconds": 0.113
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_provider_stream_closes_before_tool_execution[success]",
+      "seconds": 0.123
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_provider_stream_closes_before_tool_execution[failure]",
+      "seconds": 0.125
+    },
+    {
+      "module": "tests.test_tools",
+      "name": "test_provider_stream_closes_before_tool_execution[cancel]",
+      "seconds": 0.123
+    },
+    {
+      "module": "tests.test_version",
+      "name": "test_native_minimum_version_gate[2026.11.1-ConfigEntryState.SETUP_ERROR]",
+      "seconds": 0.032
+    },
+    {
+      "module": "tests.test_version",
+      "name": "test_native_minimum_version_gate[2026.11.2-ConfigEntryState.LOADED]",
+      "seconds": 0.12
+    },
+    {
+      "module": "tests.test_version",
+      "name": "test_native_minimum_version_gate[2026.11.3-ConfigEntryState.LOADED]",
+      "seconds": 0.107
+    },
+    {
+      "module": "tests.test_version",
+      "name": "test_hacs_and_runtime_agree_on_minimum",
+      "seconds": 0.003
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_full_and_incremental_text[stella]",
-      "seconds": 0.131
+      "seconds": 0.126
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_full_and_incremental_text[tide]",
-      "seconds": 0.106
+      "seconds": 0.118
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_failure_and_unexpected_origin[close]",
-      "seconds": 0.11
+      "seconds": 0.099
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_failure_and_unexpected_origin[failed]",
-      "seconds": 0.116
+      "seconds": 0.106
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_failure_and_unexpected_origin[redirect]",
-      "seconds": 0.104
+      "seconds": 0.111
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_sender_failure_does_not_wait_for_server",
-      "seconds": 0.109
+      "seconds": 0.104
     },
     {
       "module": "tests.test_voice",
       "name": "test_tts_cancel_closes_socket",
-      "seconds": 0.113
+      "seconds": 0.116
     },
     {
       "module": "tests.test_voice",
       "name": "test_stt_wraps_pcm_and_uses_timeout",
-      "seconds": 0.103
+      "seconds": 0.112
     },
     {
       "module": "tests.test_voice",
       "name": "test_stt_rejects_invalid_recording_before_upload[duration]",
-      "seconds": 0.101
+      "seconds": 0.106
     },
     {
       "module": "tests.test_voice",
       "name": "test_stt_rejects_invalid_recording_before_upload[size]",
-      "seconds": 0.113
+      "seconds": 0.11
     },
     {
       "module": "tests.test_voice",
       "name": "test_stt_rejects_invalid_recording_before_upload[odd]",
-      "seconds": 0.111
+      "seconds": 0.109
     },
     {
       "module": "tests.test_voice",
       "name": "test_stt_rejects_invalid_recording_before_upload[bad_ogg]",
-      "seconds": 0.117
+      "seconds": 0.107
     },
     {
       "module": "tests.test_voice",
       "name": "test_stt_valid_ogg_opus",
-      "seconds": 0.108
+      "seconds": 0.109
     },
     {
       "module": "tests.test_voice",
       "name": "test_stream_consumer_close_releases_sender_and_runtime",
-      "seconds": 0.111
+      "seconds": 0.115
     }
   ]
 }
