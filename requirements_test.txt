@@ -1,0 +1,7 @@
+homeassistant==2026.11.3
+pytest
+pytest-asyncio
+pytest-homeassistant-custom-component
+respx
+ruff
+mypy
