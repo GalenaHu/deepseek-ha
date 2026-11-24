@@ -79,3 +79,5 @@ Camera tests use the real camera component and media-source resolver with a test
 Official exact-tag hassfest plugins are run by `scripts/check_metadata.py --ha-source /path/to/core-2026.11.2` against the installed target package. Selected plugins: manifest, JSON, config schema, integration type, translations and config flow. Source checkout must include `script/hassfest` and `packages/hassfest`; the checker is not replaced or rewritten.
 
 [Official helper package](https://github.com/home-assistant/core/tree/92da9f154079459b9e547126f9bd9fce726de16a/packages/pytest-homeassistant), [official hassfest source](https://github.com/home-assistant/core/tree/92da9f154079459b9e547126f9bd9fce726de16a/script/hassfest)
+
+The pytest configuration explicitly preloads the official `pytest_homeassistant` plugin. Fresh environments can otherwise discover `respx` first, importing legacy httpx before HA installs its aliases. This is a test startup ordering requirement, not a replacement HA client or disabled test plugin. The full suite also runs with `-p respx` to verify that this discovery order cannot break initialization.
