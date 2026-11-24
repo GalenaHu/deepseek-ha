@@ -1,0 +1,40 @@
+name: Validate and package
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg libturbojpeg0
+      - run: python -m pip install -r requirements_test.txt
+      - run: python -m pip check
+      - run: ruff check custom_components tests scripts
+      - run: ruff format --check custom_components tests scripts
+      - run: mypy custom_components/deepseek_ai
+      - run: pytest -q --junitxml=test-results.xml
+      - uses: actions/checkout@v4
+        with:
+          repository: home-assistant/core
+          ref: '2026.11.3'
+          path: _ha-core
+          sparse-checkout: |
+            script/hassfest
+            packages/hassfest
+      - run: python scripts/check_metadata.py --ha-source _ha-core
+      - run: python scripts/package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-ai-installers
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS
+            test-results.xml

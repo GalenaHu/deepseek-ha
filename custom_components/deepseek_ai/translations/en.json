@@ -60,7 +60,7 @@
             "thinking": "Reasoning effort (none disables thinking)",
             "prompt": "Instructions template",
             "max_tokens": "Maximum output tokens, including reasoning",
-            "max_tool_rounds": "Maximum model rounds",
+            "max_tool_rounds": "Maximum tool rounds",
             "history_turns": "User turns in history",
             "llm_hass_api": "Home Assistant tools",
             "web": "Public web search and reading (cannot combine with HA tools)",
@@ -102,7 +102,7 @@
             "thinking": "Reasoning effort (none disables thinking)",
             "prompt": "Instructions template",
             "max_tokens": "Maximum output tokens, including reasoning",
-            "max_tool_rounds": "Maximum model rounds",
+            "max_tool_rounds": "Maximum tool rounds",
             "history_turns": "User turns in history",
             "llm_hass_api": "Home Assistant tools",
             "web": "Public web search and reading (cannot combine with HA tools)",
@@ -144,7 +144,7 @@
             "thinking": "Reasoning effort (none disables thinking)",
             "prompt": "Instructions template",
             "max_tokens": "Maximum output tokens, including reasoning",
-            "max_tool_rounds": "Maximum model rounds",
+            "max_tool_rounds": "Maximum tool rounds",
             "history_turns": "User turns in history",
             "llm_hass_api": "Home Assistant tools",
             "web": "Public web search and reading (cannot combine with HA tools)",
@@ -186,7 +186,7 @@
             "thinking": "Reasoning effort (none disables thinking)",
             "prompt": "Instructions template",
             "max_tokens": "Maximum output tokens, including reasoning",
-            "max_tool_rounds": "Maximum model rounds",
+            "max_tool_rounds": "Maximum tool rounds",
             "history_turns": "User turns in history",
             "llm_hass_api": "Home Assistant tools",
             "web": "Public web search and reading (cannot combine with HA tools)",
@@ -228,7 +228,7 @@
             "thinking": "Reasoning effort (none disables thinking)",
             "prompt": "Instructions template",
             "max_tokens": "Maximum output tokens, including reasoning",
-            "max_tool_rounds": "Maximum model rounds",
+            "max_tool_rounds": "Maximum tool rounds",
             "history_turns": "User turns in history",
             "llm_hass_api": "Home Assistant tools",
             "web": "Public web search and reading (cannot combine with HA tools)",
@@ -283,7 +283,7 @@
         "name": "Submitted speech characters"
       },
       "latency_ms": {
-        "name": "Last completed model latency"
+        "name": "Last completed request latency"
       }
     },
     "button": {

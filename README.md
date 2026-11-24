@@ -15,7 +15,7 @@
 ## 支持能力
 
 - 流式 Assist 对话、多轮上下文、指令模板、Flash/Pro、推理 none/low/high/max。
-- HA 原生设备工具与管理员工具，复用 HA 的实体暴露及用户权限；支持已有 MCP Client 注册的工具。
+- HA 原生设备工具与管理员工具，复用 HA 的实体暴露及用户权限；支持已有 MCP Client 注册的工具。管理员身份会在后续轮次和工具执行前重新检查。
 - 独立联网代理：DeepSeek Search 与网页读取，模型可附来源链接。
 - 原生 `ai_task.generate_data`、严格 JSON Schema、本地字段验证、图片和文档附件。
 - 显式添加的实验性 `ai_task.evaluate`：noul/choice/score。结果是未经校准的模型估计；不会自动选择它作为默认决策实体。
@@ -31,7 +31,7 @@
 
 联网、图片和文档会把相应内容发送至 DeepSeek。文档解析可能按页计费。每次最多5个附件，总原始体积最多20 MiB；仅处理HA提供的媒体附件，不新增任意文件路径服务。上传文件按本地所有权日志清理；删除失败或上传响应丢失时会保留记录并在重启后补偿。不要把密钥、门锁密码等放入提示模板或附件。
 
-日志与诊断只记录运行元数据，不包含 Key、对话、图片、文档和工具完整结果。诊断没有会自动消耗额度的探测功能。计数器是本集成观察到的实际请求/用量，不等同供应商账户账单。上传成功但响应丢失等情况可能无法完整计量。
+日志与诊断只记录运行元数据，不包含 Key、对话、图片、文档和工具完整结果。加载期间会统一脱敏 HA 原生 `conversation.chat_log` 与 `conversation.agent_manager` 的 DEBUG 日志，其他对话集成的这两个调试日志也会受到影响；其他集成的警告和错误保留。本集成不会禁用 HA 本身的会话记录、对话追踪或自动化追踪，请按 HA 的权限管理这些记录。诊断没有会自动消耗额度的探测功能。计数器是本集成观察到的实际请求/用量，不等同供应商账户账单。请求总数统计完成的模型和语音请求，搜索另行统计；文件操作、凭据检查和未收到完成信息的请求不计入总数。TTS字符数为提交的文字长度，不是账单字符数。上传成功但响应丢失等情况可能无法完整计量。
 
 ## 使用原生动作
 
@@ -76,3 +76,34 @@ response_variable: evaluation
 使用 Python 3.14，创建虚拟环境并安装 `requirements_test.txt`，运行 `pytest`、`ruff check`、`mypy`；`python scripts/package.py` 生成两个安装包及SHA256。测试必须导入真实HA，不使用HA替代桩，也不默认调用真实DeepSeek或家庭设备。
 
 首版实际检查结果见 `docs/VERIFICATION.md`。本地测试并不证明真实API响应质量、音箱兼容性或家庭自动化安全，部署后应从少量低影响实体开始验证。
+
+
+## 参数与限制
+
+默认模型 `deepseek-flash`，推理关闭，最多10轮工具调用（随后允许一轮最终答复），保留最近10个用户轮次，网络空闲超时60秒、任务总时限180秒、条目内最多2个并发任务。可在子项或凭据配置中调整。历史按完整用户轮次裁剪，并有40 MiB字节预算；单次请求最多48 MiB。当前轮次过大时明确失败，不拆散工具调用与结果。
+
+只有 Flash 子项声明图片与文件能力；Pro 为文字任务。PDF/Word/PPT 使用官方 `rich_layout_recognition`；文本、表格和电子书使用 `user_data`。附件上限采用比供应商更保守的本地限制。上传响应丢失后，清理日志会通过本集成随机文件名匹配远端文件，不会清空账户文件列表。
+
+STT 提供 HA 与官方共同支持的 8/16/32/44.1/48 kHz、16位、单/双声道，Opus 使用 Ogg 容器。官方另支持的 22.05/24 kHz 不在当前 HA STT 枚举内，因此不声明。所有识别在录音结束后发出。TTS 普通整句与流式入口均使用官方 WebSocket，以校验 `finish/success`；整句返回标准有限长度 WAV，流式返回带头 WAV。没有额外语速、情绪或第三方地址选项。
+
+超时、取消、卸载和重新配置会停止在途请求及工具等待。已完成工具结果留在会话中；中断且无法确认的动作标记为结果未知，集成不会自动重试。已经发往设备的动作无法通过取消请求撤销。
+
+## 复现验证与发布附件
+
+```sh
+python3.14 -m venv .venv
+.venv/bin/python -m pip install -r requirements_test.txt
+.venv/bin/python -m pytest -q
+.venv/bin/python -m ruff check custom_components tests scripts
+.venv/bin/python -m ruff format --check custom_components tests scripts
+.venv/bin/python -m mypy custom_components/deepseek_ai
+.venv/bin/python scripts/check_metadata.py --ha-source /path/to/core-2026.11.3
+.venv/bin/python scripts/package.py
+```
+
+测试摄像头依赖系统 FFmpeg、libturbojpeg；测试语音会在本机回环地址启动模拟服务。配置、会话、权限与服务使用真实HA，外部DeepSeek通信全部模拟。CI配置位于 `.github/workflows/validate.yml`，本次只在本机执行验证，尚未运行远程 CI。
+
+`dist/deepseek_ai-0.1.0-manual.zip` 为手动安装包，`dist/deepseek_ai.zip` 为 HACS release asset，`dist/deepseek-ha-0.1.0-source.zip` 为源码、测试和指南。校验值见 `dist/SHA256SUMS`。安装包不含虚拟环境、API Key、测试缓存或用户HA配置。
+
+
+接口依据：[Responses API](https://api-docs.deepseek.com/api/create-response/)、[文件解析](https://api-docs.deepseek.com/guides/document_parsing/)、[Search & Fetch](https://api-docs.deepseek.com/guides/search/)、[语音识别](https://api-docs.deepseek.com/guides/asr/)、[语音合成](https://api-docs.deepseek.com/guides/tts/)。接口封装以本次核实的公开文档为准，真实 API 行为仍需安装后验证。

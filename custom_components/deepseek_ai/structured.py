@@ -1,6 +1,5 @@
 """Strict JSON contracts for generation and experimental, uncalibrated decisions."""
 
-import json
 import math
 from typing import Any
 
@@ -11,18 +10,21 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
 from .api import ApiError
+from .json_util import decode_json
 
 
 def schema_for(structure: Any) -> dict[str, Any]:
-    return probatio.to_openapi(structure, custom_serializer=llm.selector_serializer)
+    return probatio.to_openapi(
+        structure, custom_serializer=llm.selector_serializer, openapi_version="3.1.0"
+    )
 
 
 def parse_result(text: str, schema: dict[str, Any]) -> Any:
     try:
-        value = json.loads(text, parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+        value = decode_json(text)
         Draft202012Validator(schema).validate(value)
         return value
-    except (ValueError, TypeError, ValidationError, SchemaError):
+    except ValueError, TypeError, ValidationError, SchemaError:
         raise ApiError("invalid_structured_result") from None
 
 
@@ -33,18 +35,46 @@ def evaluation_schema(task: ai_task.EvaluationTask) -> dict[str, Any]:
         if question["type"] == "noul":
             props = {"noul": probability}
         elif question["type"] == "choice":
-            props = {"choice": {"type": "string", "enum": list(question["criteria"])}, "probabilities": {"type": "object", "properties": dict.fromkeys(question["criteria"], probability), "required": list(question["criteria"]), "additionalProperties": False}}
+            props = {
+                "choice": {"type": "string", "enum": list(question["criteria"])},
+                "probabilities": {
+                    "type": "object",
+                    "properties": dict.fromkeys(question["criteria"], probability),
+                    "required": list(question["criteria"]),
+                    "additionalProperties": False,
+                },
+            }
         elif question["type"] == "score":
             count = len(question["criteria"])
-            props = {"score": {"type": "number", "minimum": 0, "maximum": count - 1}, "probabilities": {"type": "array", "items": probability, "minItems": count, "maxItems": count}}
+            props = {
+                "score": {"type": "number", "minimum": 0, "maximum": count - 1},
+                "probabilities": {
+                    "type": "array",
+                    "items": probability,
+                    "minItems": count,
+                    "maxItems": count,
+                },
+            }
         else:
             raise ApiError("unsupported_evaluation_type")
-        fields[key] = {"type": "object", "properties": props, "required": list(props), "additionalProperties": False}
-    return {"type": "object", "properties": fields, "required": list(fields), "additionalProperties": False}
+        fields[key] = {
+            "type": "object",
+            "properties": props,
+            "required": list(props),
+            "additionalProperties": False,
+        }
+    return {
+        "type": "object",
+        "properties": fields,
+        "required": list(fields),
+        "additionalProperties": False,
+    }
 
 
-def evaluation_result(task: ai_task.EvaluationTask, data: dict[str, Any]) -> ai_task.EvaluationTaskResult:
-    answers = {}
+def evaluation_result(
+    task: ai_task.EvaluationTask, data: dict[str, Any]
+) -> ai_task.EvaluationTaskResult:
+    answers: dict[str, ai_task.EvaluationAnswer] = {}
     for key, question in task.questions.items():
         value = data[key]
         if question["type"] == "noul":
@@ -52,7 +82,9 @@ def evaluation_result(task: ai_task.EvaluationTask, data: dict[str, Any]) -> ai_
             continue
         probabilities = value["probabilities"]
         numbers = list(probabilities.values()) if isinstance(probabilities, dict) else probabilities
-        if not all(math.isfinite(number) for number in numbers) or not math.isclose(sum(numbers), 1, abs_tol=1e-6):
+        if not all(math.isfinite(number) for number in numbers) or not math.isclose(
+            sum(numbers), 1, abs_tol=1e-6
+        ):
             raise ApiError("invalid_probability_distribution")
         if question["type"] == "choice":
             if probabilities[value["choice"]] < max(numbers):
@@ -64,4 +96,3 @@ def evaluation_result(task: ai_task.EvaluationTask, data: dict[str, Any]) -> ai_
                 raise ApiError("inconsistent_score")
             answers[key] = ai_task.ScoreAnswer(score=value["score"], probabilities=probabilities)
     return ai_task.EvaluationTaskResult(answers=answers)
-

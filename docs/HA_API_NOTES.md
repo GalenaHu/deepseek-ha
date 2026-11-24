@@ -2,7 +2,7 @@
 
 Checked 2026-11-24 for `deepseek_ai`. Python environment: `.venv/bin/python` → `.venv/bin/python3.14` → `/Library/Frameworks/Python.framework/Versions/3.14/bin/python3.14`.
 
-**Version boundary:** signatures below are now verified against official Core **2026.11.3**, exact commit `92da9f154079459b9e547126f9bd9fce726de16a`, read from `/private/tmp/deepseek-ha-core-2026.11.3` using `git show HEAD:<path>`. The real package installation was still downloading during this check, so this is precise source verification, not an executed HA integration test. No live provider requests were made.
+**Version boundary:** signatures verified against official Core **2026.11.3**, commit `92da9f154079459b9e547126f9bd9fce726de16a`, and the installed real package. Executed tests use `homeassistant==2026.11.3` plus official `pytest-homeassistant==2026.11.3`. No live provider requests were made.
 
 ## Conversation and provider state
 
@@ -68,8 +68,14 @@ Question classes are `TypedDict` (ordinary dictionaries at runtime): construct w
 
 Set `EVALUATE | SUPPORT_ATTACHMENTS` only on opt-in experimental evaluation entities. Do not modify HA's preferred evaluation or automatic-evaluation preference. [AI preferences](https://github.com/home-assistant/core/blob/92da9f154079459b9e547126f9bd9fce726de16a/homeassistant/components/ai_task/__init__.py)
 
-## Testing custom integrations
+## Exact-version test environment
 
-`pytest-homeassistant-custom-component` registers fixtures through its package. Use `enable_custom_integrations` (typically an autouse fixture depending on it) so the HA loader scans project `custom_components`; it removes the default empty custom-components cache. Load a real config entry with `MockConfigEntry(domain="deepseek_ai", data=..., subentries_data=[...])`, `entry.add_to_hass(hass)`, then `await hass.config_entries.async_setup(entry.entry_id)` and `await hass.async_block_till_done()`. Verify exact `MockConfigEntry` constructor in installed test-helper version before using `subentries_data`. [Plugin fixture source](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component/blob/master/src/pytest_homeassistant_custom_component/plugins.py)
+The legacy `pytest-homeassistant-custom-component` release pins an older HA version. This project instead uses the new official `pytest-homeassistant==2026.11.3`, whose entry point loads genuine HA fixtures, registries, storage, authentication, entities and services. Our fixture provides an isolated temporary configuration directory with a `custom_components` symlink and initializes the native `homeassistant` component before conversation setup. It substitutes only the remote provider HTTP/SSE/WebSocket boundary. No HA replacement stubs, dependency fallbacks, or silently skipped tests are used.
 
-Simulate provider HTTP/SSE/WebSocket only. Leave HA entity registration, ChatLog tool execution, authorization and native service schemas real. No HA replacement stubs, fake package imports or silently skipped integration tests.
+Local WebSocket tests bind only `127.0.0.1`; a transport adapter maps the official URL to that local server and retains the logical provider origin. This adapter lives only in tests. Production cannot configure a custom endpoint. Malicious-origin tests assert that no text is sent after an unexpected handshake origin.
+
+Camera tests use the real camera component and media-source resolver with a test camera returning a generated PNG. Ogg Opus tests use locally generated silence. No actual microphone, camera, speaker or home device is contacted.
+
+Official exact-tag hassfest plugins are run by `scripts/check_metadata.py --ha-source /path/to/core-2026.11.3` against the installed target package. Selected plugins: manifest, JSON, config schema, integration type, translations and config flow. Source checkout must include `script/hassfest` and `packages/hassfest`; the checker is not replaced or rewritten.
+
+[Official helper package](https://github.com/home-assistant/core/tree/92da9f154079459b9e547126f9bd9fce726de16a/packages/pytest-homeassistant), [official hassfest source](https://github.com/home-assistant/core/tree/92da9f154079459b9e547126f9bd9fce726de16a/script/hassfest)

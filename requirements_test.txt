@@ -1,7 +1,18 @@
 homeassistant==2026.11.3
-pytest
-pytest-asyncio
-pytest-homeassistant-custom-component
-respx
-ruff
-mypy
+pytest-homeassistant==2026.11.3
+pytest==9.0.3
+pytest-asyncio==1.4.0
+pytest-aiohttp==1.1.1
+ruff==0.17.6
+mypy==2.4.1
+jsonschema==4.26.0
+types-jsonschema
+gazetteer-matcher==1.1.0
+hassil==3.12.1
+home-assistant-intents==2026.10.27
+mutagen==1.48.1
+ha-ffmpeg==3.2.2
+# Native HA camera/media-source snapshot test dependencies.
+PyTurboJPEG==1.8.3
+av==19.0.0
+numpy==2.3.2

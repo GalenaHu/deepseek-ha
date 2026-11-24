@@ -13,9 +13,20 @@ def agent_settings(kind: str, data: Mapping[str, Any]) -> dict[str, Any]:
     result = {**DEFAULTS, **data}
     if result["model"] not in MODELS or result["thinking"] not in ("none", "low", "high", "max"):
         raise ValueError("invalid_model")
-    for field, minimum, maximum in (("max_tokens", 64, 384000), ("max_tool_rounds", 1, 20), ("history_turns", 1, 50), ("timeout", 5, 600), ("total_timeout", 30, 900)):
+    for field, minimum, maximum in (
+        ("max_tokens", 64, 384000),
+        ("max_tool_rounds", 1, 20),
+        ("history_turns", 1, 50),
+        ("timeout", 5, 600),
+        ("total_timeout", 30, 900),
+    ):
         value = result[field]
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or int(value) != value or not minimum <= value <= maximum:
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or int(value) != value
+            or not minimum <= value <= maximum
+        ):
             raise ValueError("invalid_limits")
         result[field] = int(value)
     apis = result.get("llm_hass_api", ["assist"] if kind == "conversation" else [])
@@ -31,4 +42,3 @@ def agent_settings(kind: str, data: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("invalid_options")
     result["llm_hass_api"] = apis
     return result
-

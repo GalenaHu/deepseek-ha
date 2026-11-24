@@ -39,7 +39,11 @@ class Attachments:
             if not targets:
                 return
             try:
-                listing = await self.api.list_files() if any(not item.get("id") for item in targets) else []
+                listing = (
+                    await self.api.list_files()
+                    if any(not item.get("id") for item in targets)
+                    else []
+                )
                 by_name = {row.get("filename"): row.get("id") for row in listing}
                 for item in targets:
                     file_id = item.get("id") or by_name.get(item["filename"])
@@ -69,7 +73,9 @@ class Attachments:
             raise ApiError("attachment_too_large")
         return data, mime or mimetypes.guess_type(path)[0] or "application/octet-stream"
 
-    async def parts(self, attachments: list[Attachment] | None, session: str, model: str) -> list[dict[str, Any]]:
+    async def parts(
+        self, attachments: list[Attachment] | None, session: str, model: str
+    ) -> list[dict[str, Any]]:
         if not attachments:
             return []
         if model != "deepseek-flash":
@@ -80,17 +86,35 @@ class Attachments:
         total = 0
         for attachment in attachments:
             path = Path(attachment.path)
-            data, mime = await self.hass.async_add_executor_job(self._read, path, attachment.mime_type)
+            try:
+                data, mime = await self.hass.async_add_executor_job(
+                    self._read, path, attachment.mime_type
+                )
+            except OSError:
+                raise ApiError("attachment_unavailable") from None
             total += len(data)
             if total > MAX_FILE_BYTES:
                 raise ApiError("attachments_too_large")
             if mime in IMAGE_MIMES:
-                parts.append({"type": "input_image", "image_url": f"data:{mime};base64," + base64.b64encode(data).decode()})
+                parts.append(
+                    {
+                        "type": "input_image",
+                        "image_url": f"data:{mime};base64," + base64.b64encode(data).decode(),
+                    }
+                )
                 continue
             suffix = path.suffix.lower()
             # HA media-source temp names may lack a suffix; map known MIME types.
             if suffix not in FILE_EXTENSIONS:
-                suffix = {"application/pdf": ".pdf", "text/plain": ".txt", "text/csv": ".csv", "application/json": ".json", "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx", "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx"}.get(mime, "")
+                suffix = {
+                    "application/pdf": ".pdf",
+                    "text/plain": ".txt",
+                    "text/csv": ".csv",
+                    "application/json": ".json",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation": ".pptx",
+                }.get(mime, "")
             if not suffix:
                 raise ApiError("unsupported_attachment_type")
             key = (session, str(path))
@@ -100,7 +124,11 @@ class Attachments:
                 async with self.lock:
                     self.owned.append(record)
                     await self.store.async_save(self.owned)
-                purpose = "rich_layout_recognition" if suffix in {".pdf", ".doc", ".docx", ".ppt", ".pptx"} else "user_data"
+                purpose = (
+                    "rich_layout_recognition"
+                    if suffix in {".pdf", ".doc", ".docx", ".ppt", ".pptx"}
+                    else "user_data"
+                )
                 file_id = await self.api.upload(filename, data, mime, purpose)
                 async with self.lock:
                     record["id"] = file_id

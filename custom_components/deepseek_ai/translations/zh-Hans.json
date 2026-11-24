@@ -60,7 +60,7 @@
             "thinking": "推理强度（none 为关闭）",
             "prompt": "指令模板",
             "max_tokens": "最大输出 token（包含推理）",
-            "max_tool_rounds": "最大模型调用轮数",
+            "max_tool_rounds": "最大工具调用轮数",
             "history_turns": "保留的用户历史轮数",
             "llm_hass_api": "Home Assistant 工具",
             "web": "联网搜索与读取（不能与 HA 工具组合）",
@@ -102,7 +102,7 @@
             "thinking": "推理强度（none 为关闭）",
             "prompt": "指令模板",
             "max_tokens": "最大输出 token（包含推理）",
-            "max_tool_rounds": "最大模型调用轮数",
+            "max_tool_rounds": "最大工具调用轮数",
             "history_turns": "保留的用户历史轮数",
             "llm_hass_api": "Home Assistant 工具",
             "web": "联网搜索与读取（不能与 HA 工具组合）",
@@ -144,7 +144,7 @@
             "thinking": "推理强度（none 为关闭）",
             "prompt": "指令模板",
             "max_tokens": "最大输出 token（包含推理）",
-            "max_tool_rounds": "最大模型调用轮数",
+            "max_tool_rounds": "最大工具调用轮数",
             "history_turns": "保留的用户历史轮数",
             "llm_hass_api": "Home Assistant 工具",
             "web": "联网搜索与读取（不能与 HA 工具组合）",
@@ -186,7 +186,7 @@
             "thinking": "推理强度（none 为关闭）",
             "prompt": "指令模板",
             "max_tokens": "最大输出 token（包含推理）",
-            "max_tool_rounds": "最大模型调用轮数",
+            "max_tool_rounds": "最大工具调用轮数",
             "history_turns": "保留的用户历史轮数",
             "llm_hass_api": "Home Assistant 工具",
             "web": "联网搜索与读取（不能与 HA 工具组合）",
@@ -228,7 +228,7 @@
             "thinking": "推理强度（none 为关闭）",
             "prompt": "指令模板",
             "max_tokens": "最大输出 token（包含推理）",
-            "max_tool_rounds": "最大模型调用轮数",
+            "max_tool_rounds": "最大工具调用轮数",
             "history_turns": "保留的用户历史轮数",
             "llm_hass_api": "Home Assistant 工具",
             "web": "联网搜索与读取（不能与 HA 工具组合）",
@@ -283,7 +283,7 @@
         "name": "已提交合成字符"
       },
       "latency_ms": {
-        "name": "最近完成的模型请求耗时"
+        "name": "最近完成的请求耗时"
       }
     },
     "button": {

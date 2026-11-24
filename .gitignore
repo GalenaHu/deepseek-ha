@@ -10,3 +10,6 @@ dist/
 .env
 .DS_Store
 
+
+_ha-core/
+test-results.xml
