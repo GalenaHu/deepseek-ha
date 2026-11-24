@@ -82,3 +82,31 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
         assert "deepseek-ha/test-results.xml" not in archive.namelist()
     module.build()
     assert (tmp_path / "dist/SHA256SUMS").read_text() == hashes
+    # Some ZIP extractors preserve timestamps. An old same-size const.py must
+    # not keep the 0.1.0 timestamp-validated bytecode after an overwrite.
+    import calendar
+    import os
+    import py_compile
+
+    installed = tmp_path / "installed_const.py"
+    with zipfile.ZipFile(tmp_path / "dist/deepseek_ai-0.1.1-manual.zip") as archive:
+        info = archive.getinfo("custom_components/deepseek_ai/const.py")
+        current = archive.read(info)
+        previous = current.replace(b'VERSION = "0.1.1"', b'VERSION = "0.1.0"').replace(
+            b'MIN_HA = "2026.11.2"', b'MIN_HA = "2026.11.3"'
+        )
+        assert len(previous) == len(current)
+        old_epoch = calendar.timegm((2026, 1, 1, 0, 0, 0))
+        installed.write_bytes(previous)
+        os.utime(installed, (old_epoch, old_epoch))
+        py_compile.compile(
+            str(installed), doraise=True, invalidation_mode=py_compile.PycInvalidationMode.TIMESTAMP
+        )
+        installed.write_bytes(current)
+        new_epoch = calendar.timegm(info.date_time)
+        os.utime(installed, (new_epoch, new_epoch))
+    loaded_spec = importlib.util.spec_from_file_location("installed_const", installed)
+    loaded = importlib.util.module_from_spec(loaded_spec)
+    loaded_spec.loader.exec_module(loaded)
+    assert loaded.MIN_HA == "2026.11.2"
+    assert loaded.VERSION == "0.1.1"

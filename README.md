@@ -110,3 +110,5 @@ python3.14 -m venv .venv
 
 
 从旧版更新时，HACS 元数据和集成运行时代码都需要更新。v0.1.1 将两处最低版本统一为2026.11.2。若 HACS仍提示需要2026.11.3，在HACS中刷新仓库信息并重新下载新版本；手动安装则用新包覆盖 `/config/custom_components/deepseek_ai/` 后重启HA。仅修改远端 `hacs.json` 不会替换 HA已经加载的Python代码。
+
+安装包时间戳使用 `SOURCE_DATE_EPOCH`（如显式提供）、Git提交时间，或无Git源码副本中的manifest文件时间。这样同一源码可重复构建，同时避免所有版本固定同一时间戳，使保留文件时间的覆盖安装误用旧Python字节码缓存。
