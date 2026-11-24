@@ -1,4 +1,4 @@
-"""Deterministic HACS asset and manual-install archive, with SHA-256 manifest."""
+"""Deterministic component and manual-install archives, with SHA-256 manifest."""
 
 import hashlib
 import json

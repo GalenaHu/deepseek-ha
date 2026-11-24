@@ -1,12 +1,12 @@
-# v0.1.1 验证结果
+# v0.1.2 验证结果
 
-验证日期：2026-11-24（Asia/Shanghai）。本次验证在隔离工作区进行，没有修改现有 HA，没有使用真实 DeepSeek API Key，也没有连接家庭设备。后续用户已授权将源码推送至个人账号 GalenaHu 的私有 GitHub 仓库；不创建 Release。
+验证日期：2026-11-24（Asia/Shanghai）。本次验证在隔离工作区进行，没有修改现有 HA，没有使用真实 DeepSeek API Key，也没有连接家庭设备。后续用户已授权将源码推送至个人账号 GalenaHu 的 GitHub 仓库；不创建 Release。最初为私有，核对本次修复时已为公开；本次未更改仓库可见性。
 
 ## 环境与结果
 
 - Python **3.14.7**，真实 `homeassistant==2026.11.2`。
 - 官方 `pytest-homeassistant==2026.11.2`；不使用锁定旧版 HA 的旧测试插件。
-- 完整测试：**96 passed，0 failed，0 skipped**，7.09 秒。
+- 完整测试：**97 passed，0 failed，0 skipped**，7.80 秒。
 - Ruff 代码检查与格式检查通过。
 - Mypy：**20个集成源文件无类型错误**，包含真实 HA 公共钩子签名检查。
 - `pip check`：无损坏依赖。
@@ -66,11 +66,19 @@ TTS完整文本与流式入口都通过官方 WebSocket校验结束事件；未�
 
 关闭请求不能撤销已经发出的物理动作。会话历史包含已完成工具结果，中断且无法确认的动作标记为未知；不自动重试。上传补偿清理依赖本地所有权日志及有效凭据，失败记录会保留供下次加载重试。
 
-加载期间原生对话 DEBUG日志全局脱敏的范围、HA自身会话/追踪仍然保留的行为见 README。源码目标仓库为 GalenaHu/deepseek-ha（私有）；HACS目录与附件已准备，在线安装还需要后续发布 Release 及配置访问权限。
+加载期间原生对话 DEBUG日志全局脱敏的范围、HA自身会话/追踪仍然保留的行为见 README。源码目标仓库为 GalenaHu/deepseek-ha（核对时为公开）；Marketplace/HACS 从 main 源码安装，不依赖 Release。已确认匿名源码下载入口可访问。若改回私有，需要改用手动安装；原生 Marketplace 下载源码文件时不附带 GitHub API 凭据。
 
 
 ## 最低版本修复
 
 保留用户将 `hacs.json` 最低版本改为2026.11.2的提交，并同步运行时 `MIN_HA`、开发依赖、文档及CI。此前仅改HACS元数据，Python运行时仍保留2026.11.3门槛；原生配置条目加载回归已复现并验证修复。另增加HACS/运行时版本一致性断言，防止再次漂移。集成版本升为0.1.1，安装后需要重启HA使新代码生效。
 
-覆盖安装回归还复现了固定ZIP时间戳与同大小常量替换造成旧`.pyc`继续生效的问题。打包已改用可复现的提交时间（或显式SOURCE_DATE_EPOCH/源码manifest时间），回归会先编译旧`.3`门槛、覆盖新包并保留ZIP时间，确认加载结果为`.2`和版本0.1.1。
+覆盖安装回归还复现了固定ZIP时间戳与同大小常量替换造成旧`.pyc`继续生效的问题。打包已改用可复现的提交时间（或显式SOURCE_DATE_EPOCH/源码manifest时间），回归会先编译旧`.3`门槛、覆盖新包并保留ZIP时间，确认加载结果为`.2`和当前 manifest 版本。
+
+## Marketplace 下载 404 修复
+
+旧 `hacs.json` 同时声明 `zip_release: true` 和 `filename: deepseek_ai.zip`，但仓库没有 Release。使用真实 HA Marketplace 的 `IntegrationRepository._async_download_version("main")` 复现了截图中的 `releases/download/main/deepseek_ai.zip` 请求；模拟该附件不存在时安装失败。
+
+v0.1.2 移除这两个字段，沿用标准 `custom_components/deepseek_ai/` 源码目录。相同回归测试验证安装器选择 main 分支源码 ZIP、实际解压组件和中文翻译、读取 `.2` 最低版本，且完全不请求 Release 附件。只替换 GitHub 下载边界，安装器和解压实现均来自真实 HA；未操作用户的 HA/Marketplace 界面。
+
+前一轮远程 CI 中，2026.11.2 完整验证通过；2026.11.3 在 Ubuntu 镜像下载阶段超时。已补充处理 GitHub runner 的 `mirror+file` 镜像列表配置，远程最新结果以 Actions 为准。

@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENT = ROOT / "custom_components/deepseek_ai"
+VERSION = json.loads((COMPONENT / "manifest.json").read_text())["version"]
 
 
 def leaves(value, prefix=""):
@@ -41,8 +42,9 @@ def test_manifest_and_hacs_metadata():
     assert manifest["integration_type"] == "service" and manifest["config_flow"]
     assert manifest["iot_class"] == "cloud_polling"
     assert manifest["requirements"] == ["jsonschema==4.26.0", "mutagen==1.48.1"]
-    assert hacs["homeassistant"] == "2026.11.2" and hacs["zip_release"]
-    assert hacs["filename"] == "deepseek_ai.zip"
+    assert hacs["homeassistant"] == "2026.11.2"
+    assert not hacs.get("zip_release") and "filename" not in hacs
+    assert not hacs["content_in_root"]
 
 
 def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
@@ -68,7 +70,7 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
         assert hashlib.sha256((tmp_path / "dist" / filename).read_bytes()).hexdigest() == digest
     for filename, prefix in (
         ("deepseek_ai.zip", ""),
-        ("deepseek_ai-0.1.1-manual.zip", "custom_components/deepseek_ai/"),
+        (f"deepseek_ai-{VERSION}-manual.zip", "custom_components/deepseek_ai/"),
     ):
         with zipfile.ZipFile(tmp_path / "dist" / filename) as archive:
             names = archive.namelist()
@@ -78,7 +80,7 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
                 "__pycache__" in name or ".env" in name or "venv" in name for name in names
             )
             assert archive.testzip() is None
-    with zipfile.ZipFile(tmp_path / "dist/deepseek-ha-0.1.1-source.zip") as archive:
+    with zipfile.ZipFile(tmp_path / f"dist/deepseek-ha-{VERSION}-source.zip") as archive:
         assert "deepseek-ha/test-results.xml" not in archive.namelist()
     module.build()
     assert (tmp_path / "dist/SHA256SUMS").read_text() == hashes
@@ -89,10 +91,10 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
     import py_compile
 
     installed = tmp_path / "installed_const.py"
-    with zipfile.ZipFile(tmp_path / "dist/deepseek_ai-0.1.1-manual.zip") as archive:
+    with zipfile.ZipFile(tmp_path / f"dist/deepseek_ai-{VERSION}-manual.zip") as archive:
         info = archive.getinfo("custom_components/deepseek_ai/const.py")
         current = archive.read(info)
-        previous = current.replace(b'VERSION = "0.1.1"', b'VERSION = "0.1.0"').replace(
+        previous = current.replace(f'VERSION = "{VERSION}"'.encode(), b'VERSION = "0.1.0"').replace(
             b'MIN_HA = "2026.11.2"', b'MIN_HA = "2026.11.3"'
         )
         assert len(previous) == len(current)
@@ -109,4 +111,4 @@ def test_install_archives_are_complete_and_repeatable(tmp_path, monkeypatch):
     loaded = importlib.util.module_from_spec(loaded_spec)
     loaded_spec.loader.exec_module(loaded)
     assert loaded.MIN_HA == "2026.11.2"
-    assert loaded.VERSION == "0.1.1"
+    assert loaded.VERSION == VERSION

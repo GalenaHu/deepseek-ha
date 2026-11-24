@@ -1,7 +1,5 @@
 {
   "name": "DeepSeek AI",
   "homeassistant": "2026.11.2",
-  "content_in_root": false,
-  "zip_release": true,
-  "filename": "deepseek_ai.zip"
+  "content_in_root": false
 }

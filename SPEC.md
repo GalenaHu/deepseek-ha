@@ -1,8 +1,8 @@
-# DeepSeek AI v0.1.1
+# DeepSeek AI v0.1.2
 
 User-approved implementation scope, 2026-11-24.
 
-- Independent `deepseek_ai` custom integration. Minimum Home Assistant 2026.11.2; official DeepSeek endpoints only. No existing HA instance changes. GitHub source publication is authorized by the subsequent user request: use the same personal account as Biology (GalenaHu), with matching private visibility; no Release publication is requested.
+- Independent `deepseek_ai` custom integration. Minimum Home Assistant 2026.11.2; official DeepSeek endpoints only. No existing HA instance changes. GitHub source publication is authorized by the subsequent user request: use the same personal account as Biology (GalenaHu). Initially private; observed public on 2026-11-24, without changing visibility in this fix. No Release publication is requested. Marketplace/HACS installs the main branch source directory.
 - One credentials entry, multiple conversation, generation, experimental evaluation, STT and TTS subentries.
 - Streaming multi-turn Responses API conversation, HA tools executed by ChatLog with caller permissions; no tools on AI tasks/evaluations. Web search/fetch agents cannot select HA tools.
 - Native conversation.process, ai_task.generate_data, ai_task.evaluate, tts.speak. Strict structured results including images and files. Evaluation types noul/choice/score, opt-in, not calibrated or automatically selected.

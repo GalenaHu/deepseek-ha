@@ -4,13 +4,15 @@
 
 ## 安装
 
-1. 解压 `deepseek_ai-0.1.1-manual.zip` 到 HA 的 `/config/`，确认存在 `/config/custom_components/deepseek_ai/manifest.json`。
+1. 解压 `deepseek_ai-0.1.2-manual.zip` 到 HA 的 `/config/`，确认存在 `/config/custom_components/deepseek_ai/manifest.json`。
 2. 重启 HA，进入「设置 → 设备与服务 → 添加集成」，搜索 **DeepSeek AI**。
 3. 输入 DeepSeek API Key。验证使用 `/models`，不产生模型生成请求。
 4. 默认创建对话、AI 数据任务、语音识别、语音合成四个子项。可继续添加多个独立子项，在各子项菜单中重新配置。
 5. 在「设置 → 语音助手」选择本集成的对话、STT 和 TTS 实体。唤醒词继续使用 HA 现有方案。
 
-`deepseek_ai.zip` 是 HACS release asset 格式；本项目附 `hacs.json`。目标源码仓库为个人账号下的 [GalenaHu/deepseek-ha](https://github.com/GalenaHu/deepseek-ha)，与 Biology 一样使用私有可见性。此次推送源码与 CI 配置，不创建 Release；HACS 在线安装还需要后续发布 Release 附件及配置相应仓库访问权限。安装期间不要把 API Key 写入源码或公开 issue。
+也可通过 HA 内置 Marketplace（或兼容的 HACS）添加自定义集成仓库 [GalenaHu/deepseek-ha](https://github.com/GalenaHu/deepseek-ha)，选择 `main` 下载，再重启 HA。安装使用仓库中的 `custom_components/deepseek_ai/` 源码目录，不依赖 Release 附件。2026-11-24 核对时仓库已为公开，可匿名下载源码。若以后改回私有，Marketplace 的源码文件下载不会携带 GitHub API 凭据，应改用手动安装包。安装期间不要把 API Key 写入源码或公开 issue。
+
+从旧配置升级时，先在 Marketplace 仓库详情页刷新仓库信息，再选择 `main` 重新下载并重启 HA。v0.1.2 移除了错误的 Release ZIP 配置；如果仍请求 `/releases/download/main/deepseek_ai.zip`，说明安装器尚未取得新的仓库元数据。最低版本在元数据和运行时代码中均为 **2026.11.2**。
 
 ## 支持能力
 
@@ -103,12 +105,12 @@ python3.14 -m venv .venv
 
 测试摄像头依赖系统 FFmpeg、libturbojpeg；测试语音会在本机回环地址启动模拟服务。配置、会话、权限与服务使用真实HA，外部DeepSeek通信全部模拟。CI配置位于 `.github/workflows/validate.yml`，推送后 GitHub Actions 会执行同样的验证并生成可下载安装附件；实际远程运行结果以仓库 Actions 页面为准。
 
-`dist/deepseek_ai-0.1.1-manual.zip` 为手动安装包，`dist/deepseek_ai.zip` 为 HACS release asset，`dist/deepseek-ha-0.1.1-source.zip` 为源码、测试和指南。校验值见 `dist/SHA256SUMS`。安装包不含虚拟环境、API Key、测试缓存或用户HA配置。
+`dist/deepseek_ai-0.1.2-manual.zip` 为手动安装包，`dist/deepseek_ai.zip` 为组件目录内容的 ZIP 备用包，`dist/deepseek-ha-0.1.2-source.zip` 为源码、测试和指南。Marketplace/HACS 在线安装直接读取仓库源码，不下载这些本地 ZIP。校验值见 `dist/SHA256SUMS`。安装包不含虚拟环境、API Key、测试缓存或用户HA配置。
 
 
 接口依据：[Responses API](https://api-docs.deepseek.com/api/create-response/)、[文件解析](https://api-docs.deepseek.com/guides/document_parsing/)、[Search & Fetch](https://api-docs.deepseek.com/guides/search/)、[语音识别](https://api-docs.deepseek.com/guides/asr/)、[语音合成](https://api-docs.deepseek.com/guides/tts/)。接口封装以本次核实的公开文档为准，真实 API 行为仍需安装后验证。
 
 
-从旧版更新时，HACS 元数据和集成运行时代码都需要更新。v0.1.1 将两处最低版本统一为2026.11.2。若 HACS仍提示需要2026.11.3，在HACS中刷新仓库信息并重新下载新版本；手动安装则用新包覆盖 `/config/custom_components/deepseek_ai/` 后重启HA。仅修改远端 `hacs.json` 不会替换 HA已经加载的Python代码。
+从旧版更新时，安装器元数据和集成运行时代码都需要更新。v0.1.1 将两处最低版本统一为2026.11.2，v0.1.2 修复无 Release 时的下载 404。若仍提示需要2026.11.3，刷新仓库信息并重新下载 `main`；手动安装则用新包覆盖 `/config/custom_components/deepseek_ai/` 后重启HA。仅修改远端 `hacs.json` 不会替换 HA已经加载的Python代码。旧日志条目会保留，请按最近一次时间判断是否仍有新错误。
 
 安装包时间戳使用 `SOURCE_DATE_EPOCH`（如显式提供）、Git提交时间，或无Git源码副本中的manifest文件时间。这样同一源码可重复构建，同时避免所有版本固定同一时间戳，使保留文件时间的覆盖安装误用旧Python字节码缓存。

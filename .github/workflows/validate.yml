@@ -23,6 +23,8 @@ jobs:
         run: |
           for ubuntu_source in /etc/apt/sources.list /etc/apt/sources.list.d/ubuntu.sources; do
             if [ -f "$ubuntu_source" ]; then
+              # Hosted runners can use mirror lists instead of literal hosts.
+              sudo sed -E -i 's|mirror\+file:/etc/apt/apt-mirrors(-security)?\.txt|http://azure.archive.ubuntu.com/ubuntu|g' "$ubuntu_source"
               sudo sed -E -i 's|https?://([a-zA-Z0-9.-]+\.ec2\.)?archive\.ubuntu\.com/ubuntu|http://azure.archive.ubuntu.com/ubuntu|g' "$ubuntu_source"
             fi
           done
